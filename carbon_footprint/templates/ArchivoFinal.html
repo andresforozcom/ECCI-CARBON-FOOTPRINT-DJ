@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Herramienta Huella de Carbono · ECCI (Prototipo)</title>
+  <meta name="description" content="Prototipo - Menú principal y pantallas de Emisiones. ECCI." />
+  <link rel="stylesheet" href="static/estilo.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">ECCI</div>
+        <div>
+          <h1>Herramienta de Cálculo de Huella de Carbono</h1>
+          <div class="subtitle">Prototipo · 6ANL</div>
+        </div>
+      </div>
+      <div>
+        <button id="downloadBtn" class="tab">Descargar datos</button>
+      </div>
+    </header>
+
+    <div class="main">
+      <div class="panel">
+        <div class="menu-hero">
+          <div class="menu-title">Menú Principal</div>
+
+          <div class="tabs" role="tablist" aria-label="Secciones principales">
+            <button class="tab active" data-screen="screen-menu">Inicio</button>
+          </div>
+
+          <div class="menu-grid" style="margin-top:8px">
+            <div class="menu-item" data-screen="screen-emisiones">
+              <div class="icon">D</div>
+              <div>
+                <div class="label">Emisiones directas</div>
+                <div class="muted">Combustibles, fugas, procesos</div>
+              </div>
+            </div>
+          <div class="menu-item" data-screen="screen-procesos">
+            <div class="icon">P</div>
+            <div>
+              <div class="label">Emisiones Indirectas</div>
+              <div class="muted">Producción y emisiones por proceso</div>
+            </div>
+          </div>
+
+          <div class="menu-item" data-screen="screen-remociones">
+            <div class="icon">R</div>
+            <div>
+              <div class="label">Remociones</div>
+              <div class="muted">Inventarios forestales, residuos</div>
+            </div>
+          </div>
+
+          <div class="menu-item" data-screen="screen-huella">
+            <div class="icon">H</div>
+            <div>
+              <div class="label">Huella de carbono</div>
+              <div class="muted">Resultados y reportes</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;color:var(--muted)">
+          <strong>Nota:</strong> Antes de usar la herramienta es importante leer el Manual de la herramienta de cálculo de huella de carbono a nivel corporativo, para llevar a cabo un cálculo correcto.
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- Start screens -->
+        <section id="screen-menu" class="screen active" aria-live="polite">
+          <h2 style="color:var(--ecci-blue)">Bienvenido</h2>
+          <p class="muted">Selecciona una categoría del menú para comenzar a ingresar datos.</p>
+
+          <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:220px" class="panel">
+              <h3 style="margin-top:0;color:var(--ecci-blue)">Resumen rápido</h3>
+              <p class="muted">Totales calculados (simulados) y acceso rápido.</p>
+
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <div style="flex:1;background:#f8fafc;padding:12px;border-radius:10px;text-align:center">
+                  <div style="font-size:20px;color:var(--ecci-blue);font-weight:800">26.559</div>
+                  <div class="muted">t CO₂e (Total ejemplo)</div>
+                </div>
+
+                <div style="flex:1;background:#fff7ec;padding:12px;border-radius:10px;text-align:center;border:1px solid rgba(165,205,57,0.15)">
+                  <div style="font-size:20px;color:var(--ecci-green);font-weight:800">2.720</div>
+                  <div class="muted">t CO₂e (Biogénicas)</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="flex:1;min-width:220px" class="panel">
+              <h3 style="margin-top:0;color:var(--ecci-blue)">Instrucciones</h3>
+              <ol style="color:var(--muted)">
+                <li>
+                  La herramienta de cálculo de huella de carbono permite la cuantificación de emisiones y remociones de GEI,
+                  generando un reporte bajo los lineamientos del estándar NTC ISO 14064-1:2022.
+                  Se busca contribuir con la gestión de la huella de carbono a nivel organizacional
+                  mediante la construcción de un inventario de emisiones y remociones.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- Emisiones Combustibles Screen -->
+        <section id="screen-emisiones" class="screen" aria-hidden="true">
+          <h2 style="text-align:center;color:var(--ecci-blue)">Emisiones Directas</h2>
+          <p class="muted" style="text-align:center">Tabla editable para captura de consumos y cálculo de emisiones.</p>
+
+          <div style="display:flex;justify-content:center;margin-top:12px;gap:8px;flex-wrap:wrap">
+            <button class="subtab active" data-sub="combustibles1">Consumo de combustibles (Fuentes Estacionarias)</button>
+            <button class="subtab" data-sub="combustibles2">Consumo de combustibles (Fuentes Móviles)</button>
+            <button class="subtab" data-sub="procesos">Procesos Industriales</button>
+            <button class="subtab" data-sub="emisiones1">Emisiones Fugitivas</button>
+            <button class="subtab" data-sub="emisiones2">Emisiones por Lubricantes</button>
+          </div>
+
+          <div id="sub-combustibles1" class="subscreen active">
+            <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Combustible</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-combustibles2" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Combustible</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-procesos" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Tipo de Producción</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-emisiones1" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Agente utilizado</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-emisiones2" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Agente utilizado</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+        </section>
+
+        <!-- Procesos industriales -->
+        <section id="screen-procesos" class="screen" aria-hidden="true">
+          <h2 style="text-align:center;color:var(--ecci-blue)">Emisiones Indirectas</h2>
+          <p class="muted" style="text-align:center">Registro de emisiones indirectas asociadas al consumo energético y servicios.</p>
+
+          <div style="display:flex;justify-content:center;margin-top:12px;gap:8px;flex-wrap:wrap">
+            <button class="subtab active" data-sub="electricidad">Electricidad</button>
+            <button class="subtab" data-sub="viajes">Viajes Aéreos</button>
+            <button class="subtab" data-sub="desplazamiento1">Desplazamiento terrestre de empleados</button>
+            <button class="subtab" data-sub="desplazamiento2">Transporte terrestre de larga distancia</button>
+            <button class="subtab" data-sub="hospedaje">Hospedaje</button>
+            <button class="subtab" data-sub="consumo">Consumo de Papel</button>
+            <button class="subtab" data-sub="residuos">Residuos</button>
+          </div>
+
+          <div id="sub-electricidad" class="subscreen active">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Energia Electrica</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-viajes" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Viaje</th>
+                  <th>Tipo de vuelo</th>
+                  <th>Unidad</th>
+                  <th>No. de pasajeros</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-desplazamiento1" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Medio de transporte</th>
+                  <th>Unidad (Km recorridos)</th>
+                  <th>Valor</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-desplazamiento2" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Medio de transporte / combustible</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-hospedaje" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Alojamiento y hospedaje</th>
+                  <th>Unidad</th>
+                  <th>No. de visitantes</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-consumo" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Consumo de papel</th>
+                  <th>Unidad</th>
+                  <th>Consumo (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+
+          <div id="sub-residuos" class="subscreen">
+                        <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Descripción de la fuente</th>
+                  <th>Tratamiento y/o disposicion final de residuos</th>
+                  <th>Unidad</th>
+                  <th>Disposicion (valor)</th>
+                  <th>Emisiones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><select><option value="">Unidad</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+          </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+        </section>
+
+        <!-- Remociones -->
+        <section id="screen-remociones" class="screen" aria-hidden="true">
+          <h2 style="text-align:center;color:var(--ecci-blue)">Remociones</h2>
+          <p class="muted" style="text-align:center">Registro de acciones de captura o compensación de CO₂.</p>
+
+          <div style="display:flex;justify-content:center;margin-top:12px;gap:8px;flex-wrap:wrap">
+            <button class="subtab active" data-sub="reforestacion">Inventario forestal</button>
+            <button class="subtab" data-sub="captura-tecnologica">Residuos Aprovechables</button>
+          </div>
+
+          <div id="sub-reforestacion" class="subscreen active">
+            <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Especie</th>
+                  <th>Número de individuos</th>
+                  <th>Captura total tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Especie"></td>
+                  <td><input type="number" placeholder="0" min="0"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" style="text-align:right;font-weight:700">Total</td>
+                  <td colspan="2">0,000</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+            </div>
+            <p class="muted" style="text-align:center">Registro de árboles plantados y su captura estimada de CO₂.</p>
+          </div>
+
+          <div id="sub-captura-tecnologica" class="subscreen">
+            <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
+              Emisiones biogénicas antropogénicas
+            </p>
+            <table class="emisiones-table">
+              <thead>
+                <tr>
+                  <th>Residuos Aprovechables</th>
+                  <th>Unidad</th>
+                  <th>Aprovechamiento (valor)</th>
+                  <th>Remociones totales tCO₂e</th>
+                  <th>Incertidumbre actividad</th>
+                  <th>Incertidumbre fuente</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Descripción"></td>
+                  <td><select><option value="">Seleccione</option></select></td>
+                  <td><input type="number" step="0.001" placeholder="0.000"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                  <td><input type="text" placeholder="+/- 0,000%" disabled></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" style="text-align:right;font-weight:700">Total</td>
+                  <td>0,000</td>
+                  <td colspan="2">+/- 0,000%</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="action-buttons">
+              <button>Agregar fila</button>
+              <button>Eliminar fila</button>
+              <button>Calcular</button>
+              <button>Exportar CSV</button>
+            </div>
+            <p class="muted" style="text-align:center">...</p>
+          </div>
+        </section>
+        
+        <!-- Huella de Carbono -->
+        <section id="screen-huella" class="screen" aria-hidden="true">
+          <h2 style="text-align:center;color:var(--ecci-blue)">Huella de Carbono</h2>
+          <p class="muted" style="text-align:center">Visualización consolidada de las emisiones y remociones.</p>
+
+          <div style="display:flex;justify-content:center;margin-top:12px;gap:8px;flex-wrap:wrap">
+            <button class="subtab active" data-sub="resumen-general">Resumen general</button>
+            <button class="subtab" data-sub="graficos">Gráficos</button>
+            <button class="subtab" data-sub="recomendaciones">Recomendaciones</button>
+          </div>
+
+          <div id="sub-resumen-general" class="subscreen">
+            <p class="muted" style="text-align:center">Totales de emisiones y remociones en tCO₂e.</p>
+          </div>
+
+          <div id="sub-graficos" class="subscreen">
+            <p class="muted" style="text-align:center">Gráficos comparativos y tendencias (pendiente de diseño).</p>
+          </div>
+
+          <div id="sub-recomendaciones" class="subscreen">
+            <p class="muted" style="text-align:center">Sugerencias de reducción y compensación.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Right column: datos organización -->
+    <aside class="panel org">
+      <h3>Datos de la organización</h3>
+      <div style="margin-top:10px">
+        <div class="field">
+          <label>Nombre de la organización</label>
+          <input id="org-name" value="Universidad ECCI">
+        </div>
+        <div class="field">
+          <label>NIT</label>
+          <input id="org-nit" placeholder="Ej: 123456789">
+        </div>
+        <div class="field">
+          <label>Sector económico</label>
+          <input id="org-sector" placeholder="Ej: Educación">
+        </div>
+        <div class="field">
+          <label>Responsable</label>
+          <input id="org-name-resp" placeholder="Nombre">
+        </div>
+        <div class="field">
+          <label>Año de cálculo</label>
+          <input id="org-year" value="2022">
+        </div>
+      </div>
+
+      <div style="margin-top:12px;border-top:1px dashed #e2e8f0;padding-top:10px">
+        <h4 style="margin:0;color:var(--ecci-blue)">Diligenciamiento de celdas y datos predeterminados</h4>
+        <ul style="color:var(--muted);padding-left:16px">
+          <li>Las celdas blancas son editables.</li>
+          <li>Campos en azul claro son desplegables.</li>
+          <li>Resultados se calculan con los factores.</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:12px;border-top:1px dashed #e2e8f0;padding-top:10px">
+        <h4 style="margin:0;color:var(--ecci-blue)">Acciones</h4>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="saveLocal" class="tab">Guardar local</button>
+          <button id="loadLocal" class="tab">Cargar local</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="muted">Prototipo · Universidad ECCI</footer>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // --- NAVEGACIÓN ENTRE PANTALLAS PRINCIPALES ---
+    const menuItems = document.querySelectorAll(".menu-item");
+    const screens = document.querySelectorAll(".screen");
+    const tabs = document.querySelectorAll(".tab[data-screen]");
+
+    function showScreen(screenId) {
+      screens.forEach(s => s.classList.remove("active"));
+      const target = document.getElementById(screenId);
+      if (target) target.classList.add("active");
+    }
+
+    // Desde los botones del menú principal
+    menuItems.forEach(item => {
+      item.addEventListener("click", () => {
+        const screenId = item.dataset.screen;
+        showScreen(screenId);
+
+        tabs.forEach(t => t.classList.remove("active"));
+        const currentTab = document.querySelector(`.tab[data-screen="${screenId}"]`);
+        if (currentTab) currentTab.classList.add("active");
+      });
+    });
+
+    // Desde las pestañas principales superiores
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const screenId = tab.dataset.screen;
+        showScreen(screenId);
+
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+      });
+    });
+
+    // --- NAVEGACIÓN ENTRE SUBPANTALLAS ---
+    document.querySelectorAll(".subtab").forEach(subtab => {
+      subtab.addEventListener("click", () => {
+        const subId = subtab.dataset.sub;
+        const parentSection = subtab.closest(".screen");
+
+        parentSection.querySelectorAll(".subtab").forEach(btn => btn.classList.remove("active"));
+        parentSection.querySelectorAll(".subscreen").forEach(sub => sub.classList.remove("active"));
+
+        subtab.classList.add("active");
+        const targetSub = parentSection.querySelector(`#sub-${subId}`);
+        if (targetSub) targetSub.classList.add("active");
+      });
+    });
+
+    // --- TABLAS (AGREGAR / ELIMINAR / CALCULAR / EXPORTAR) ---
+    document.querySelectorAll(".action-buttons").forEach(container => {
+      const table = container.previousElementSibling;
+      if (!table) return;
+
+      const addBtn = container.querySelector("button:nth-child(1)");
+      const delBtn = container.querySelector("button:nth-child(2)");
+      const calcBtn = container.querySelector("button:nth-child(3)");
+      const exportBtn = container.querySelector("button:nth-child(4)");
+
+      // Agregar fila
+      addBtn.addEventListener("click", () => {
+        const tbody = table.querySelector("tbody");
+        const firstRow = tbody.querySelector("tr");
+        if (!firstRow) return;
+        const newRow = firstRow.cloneNode(true);
+        newRow.querySelectorAll("input, select").forEach(el => {
+          if (el.tagName === "INPUT") el.value = "";
+          if (el.tagName === "SELECT") el.selectedIndex = 0;
+        });
+        tbody.appendChild(newRow);
+      });
+
+      // Eliminar última fila
+      delBtn.addEventListener("click", () => {
+        const tbody = table.querySelector("tbody");
+        if (tbody.rows.length > 1) tbody.deleteRow(-1);
+      });
+
+      // Calcular totales
+      calcBtn.addEventListener("click", () => {
+        const tbody = table.querySelector("tbody");
+        const tfoot = table.querySelector("tfoot td:nth-child(2), tfoot td:nth-last-child(3)");
+        let total = 0;
+
+        tbody.querySelectorAll("tr").forEach(row => {
+          const inputs = row.querySelectorAll("input[type='number']:not([disabled])");
+          if (inputs.length >= 2) {
+            const val = parseFloat(inputs[0].value) || 0;
+            // Emisiones calculadas simples (ejemplo multiplicando por factor fijo)
+            const result = val * 0.25;
+            const output = row.querySelector("input[disabled]");
+            if (output) output.value = result.toFixed(3);
+            total += result;
+          }
+        });
+
+        const totalCell = table.querySelector("tfoot td:nth-child(2), tfoot td:nth-last-child(3)");
+        if (totalCell) totalCell.textContent = total.toFixed(3);
+      });
+
+      // Exportar CSV
+      exportBtn.addEventListener("click", () => {
+        const rows = [...table.querySelectorAll("tr")];
+        const csv = rows.map(r =>
+          [...r.querySelectorAll("th,td")]
+            .map(c => '"' + (c.querySelector("input, select")?.value || c.textContent.trim()) + '"')
+            .join(",")
+        ).join("\n");
+
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${table.closest("section").id}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    });
+
+    // --- GUARDAR Y CARGAR LOCAL ---
+    const saveLocal = document.getElementById("saveLocal");
+    const loadLocal = document.getElementById("loadLocal");
+
+    saveLocal.addEventListener("click", () => {
+      const data = {};
+      document.querySelectorAll("table.emisiones-table").forEach((table, i) => {
+        data[`tabla${i}`] = [...table.querySelectorAll("tbody tr")].map(row =>
+          [...row.querySelectorAll("input, select")].map(el => el.value)
+        );
+      });
+      localStorage.setItem("huellaData", JSON.stringify(data));
+      alert("Datos guardados localmente.");
+    });
+
+    loadLocal.addEventListener("click", () => {
+      const stored = localStorage.getItem("huellaData");
+      if (!stored) return alert("No hay datos guardados.");
+      const data = JSON.parse(stored);
+      document.querySelectorAll("table.emisiones-table").forEach((table, i) => {
+        const tbody = table.querySelector("tbody");
+        tbody.innerHTML = "";
+        if (data[`tabla${i}`]) {
+          data[`tabla${i}`].forEach(rowData => {
+            const row = document.createElement("tr");
+            rowData.forEach(val => {
+              const cell = document.createElement("td");
+              const input = document.createElement("input");
+              input.value = val;
+              cell.appendChild(input);
+              row.appendChild(cell);
+            });
+            tbody.appendChild(row);
+          });
+        }
+      });
+      alert("Datos cargados.");
+    });
+
+    // --- DESCARGAR DATOS ---
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      alert("Función de descarga completa en desarrollo.");
+    });
+  });
+</script>
+
+
+</body>
+</html>
