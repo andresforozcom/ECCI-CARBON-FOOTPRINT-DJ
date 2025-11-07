@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.decorators.http import require_GET
 
 from rest_framework import viewsets, permissions
 from .models import (
@@ -24,6 +25,12 @@ from .serializers import (
 # =====================================================
 # === BASE CONFIGURATION ===============================
 # =====================================================
+
+@require_GET
+def dashboard(request):
+    """Renderiza la interfaz principal del prototipo."""
+    return render(request, 'ArchivoFinal.html')
+
 
 class BasePermissionViewSet(viewsets.ModelViewSet):
     """Base viewset con permisos básicos y configuración común."""
