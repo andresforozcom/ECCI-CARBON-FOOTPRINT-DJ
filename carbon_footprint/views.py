@@ -10,7 +10,7 @@ from .models import (
     FuelType, WasteType, ExtinguisherType, PaperWeightCatalog,
     ElectricityConsumption, NaturalGasConsumption, FuelConsumption,
     VehicleFleetConsumption, ExtinguisherRefill, WasteRecord,
-    PaperConsumption, PurchasedGoodsServices, Flight,
+    PaperConsumption, Flight,
     FieldPracticeTrip, RemovalRecord
 )
 from .serializers import (
@@ -19,8 +19,7 @@ from .serializers import (
     WasteTypeSerializer, ExtinguisherTypeSerializer, PaperWeightCatalogSerializer,
     ElectricityConsumptionSerializer, NaturalGasConsumptionSerializer,
     FuelConsumptionSerializer, VehicleFleetConsumptionSerializer,
-    ExtinguisherRefillSerializer, WasteRecordSerializer, PaperConsumptionSerializer,
-    PurchasedGoodsServicesSerializer, FlightSerializer, FieldPracticeTripSerializer,
+    ExtinguisherRefillSerializer, WasteRecordSerializer, PaperConsumptionSerializer, FlightSerializer, FieldPracticeTripSerializer,
     RemovalRecordSerializer
 )
 
@@ -136,9 +135,7 @@ class PaperConsumptionViewSet(BasePermissionViewSet):
     serializer_class = PaperConsumptionSerializer
 
 
-class PurchasedGoodsServicesViewSet(BasePermissionViewSet):
-    queryset = PurchasedGoodsServices.objects.select_related('campus', 'period', 'emission_factor').all()
-    serializer_class = PurchasedGoodsServicesSerializer
+
 
 
 class FlightViewSet(BasePermissionViewSet):

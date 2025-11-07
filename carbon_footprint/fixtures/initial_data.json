@@ -1,0 +1,332 @@
+[
+  {
+    "model": "carbon_footprint.emissioncategory",
+    "pk": 1,
+    "fields": {
+      "code": 1,
+      "name": "Alcance 1 - Emisiones directas",
+      "description": "Combustibles, procesos industriales y fugitivas."
+    }
+  },
+  {
+    "model": "carbon_footprint.emissioncategory",
+    "pk": 2,
+    "fields": {
+      "code": 2,
+      "name": "Alcance 2 - Electricidad",
+      "description": "Emisiones indirectas por energía adquirida."
+    }
+  },
+  {
+    "model": "carbon_footprint.emissioncategory",
+    "pk": 3,
+    "fields": {
+      "code": 3,
+      "name": "Alcance 3 - Otras indirectas",
+      "description": "Viajes, residuos, papel y bienes/servicios."
+    }
+  },
+
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 1,
+    "fields": { "code": "ED1", "name": "Combustibles estacionarios", "unit_default": "gal", "category": 1 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 2,
+    "fields": { "code": "ED2", "name": "Combustibles móviles", "unit_default": "gal", "category": 1 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 3,
+    "fields": { "code": "ED3", "name": "Procesos industriales", "unit_default": "kg", "category": 1 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 4,
+    "fields": { "code": "ED4", "name": "Emisiones fugitivas", "unit_default": "kg", "category": 1 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 5,
+    "fields": { "code": "ED5", "name": "Lubricantes", "unit_default": "L", "category": 1 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 6,
+    "fields": { "code": "EI1", "name": "Electricidad", "unit_default": "kWh", "category": 2 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 7,
+    "fields": { "code": "EI2", "name": "Transporte y hospedaje", "unit_default": "km", "category": 3 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 8,
+    "fields": { "code": "EI3", "name": "Consumo de papel", "unit_default": "resmas", "category": 3 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 9,
+    "fields": { "code": "EI4", "name": "Residuos", "unit_default": "kg", "category": 3 }
+  },
+  {
+    "model": "carbon_footprint.emissionsource",
+    "pk": 10,
+    "fields": { "code": "RE1", "name": "Remociones", "unit_default": "tCO2e", "category": 3 }
+  },
+
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "GASOLINA",
+    "fields": { "description": "Gasolina corriente" }
+  },
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "ACPM",
+    "fields": { "description": "Diésel / ACPM" }
+  },
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "GASNATURAL",
+    "fields": { "description": "Gas natural vehicular" }
+  },
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "GLP",
+    "fields": { "description": "Gas licuado de petróleo (GLP)" }
+  },
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "KEROSENE",
+    "fields": { "description": "Kerosene / Jet Fuel" }
+  },
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "BIODIESEL",
+    "fields": { "description": "Biodiésel B10" }
+  },
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "ETANOL",
+    "fields": { "description": "Etanol anhidro" }
+  },
+  {
+    "model": "carbon_footprint.fueltype",
+    "pk": "CARBON",
+    "fields": { "description": "Carbón mineral" }
+  },
+
+  {
+    "model": "carbon_footprint.wastetype",
+    "pk": "RESIDUO_RSU",
+    "fields": { "description": "Residuos sólidos ordinarios", "treatment": "Relleno sanitario" }
+  },
+  {
+    "model": "carbon_footprint.wastetype",
+    "pk": "RESIDUO_REC",
+    "fields": { "description": "Residuos reciclables", "treatment": "Reciclaje" }
+  },
+  {
+    "model": "carbon_footprint.wastetype",
+    "pk": "RESIDUO_ORG",
+    "fields": { "description": "Residuos orgánicos", "treatment": "Compostaje" }
+  },
+  {
+    "model": "carbon_footprint.wastetype",
+    "pk": "RESIDUO_PEL",
+    "fields": { "description": "Residuos peligrosos", "treatment": "Disposición especial" }
+  },
+
+  {
+    "model": "carbon_footprint.extinguishertype",
+    "pk": "CO2",
+    "fields": { "description": "Dióxido de carbono (CO₂)", "gwp_100yr": 1 }
+  },
+  {
+    "model": "carbon_footprint.extinguishertype",
+    "pk": "HFC-134a",
+    "fields": { "description": "1,1,1,2-Tetrafluoroetano (HFC-134a)", "gwp_100yr": 1430 }
+  },
+  {
+    "model": "carbon_footprint.extinguishertype",
+    "pk": "HFC-404A",
+    "fields": { "description": "Mezcla HFC-404A", "gwp_100yr": 3920 }
+  },
+  {
+    "model": "carbon_footprint.extinguishertype",
+    "pk": "HFC-410A",
+    "fields": { "description": "Mezcla HFC-410A", "gwp_100yr": 2088 }
+  },
+  {
+    "model": "carbon_footprint.extinguishertype",
+    "pk": "HFC-407C",
+    "fields": { "description": "Mezcla HFC-407C", "gwp_100yr": 1774 }
+  },
+  {
+    "model": "carbon_footprint.extinguishertype",
+    "pk": "HCFC-22",
+    "fields": { "description": "Clorodifluorometano (HCFC-22)", "gwp_100yr": 1810 }
+  },
+
+  {
+    "model": "carbon_footprint.paperweightcatalog",
+    "pk": "A4",
+    "fields": { "kg_per_ream": 2.5 }
+  },
+  {
+    "model": "carbon_footprint.paperweightcatalog",
+    "pk": "Carta",
+    "fields": { "kg_per_ream": 2.4 }
+  },
+  {
+    "model": "carbon_footprint.paperweightcatalog",
+    "pk": "Oficio",
+    "fields": { "kg_per_ream": 2.6 }
+  },
+
+  {
+    "model": "carbon_footprint.campus",
+    "pk": 1,
+    "fields": { "name": "Sede Principal", "city": "Bogotá", "locality": "Teusaquillo", "area_m2": 12000 }
+  },
+  {
+    "model": "carbon_footprint.campus",
+    "pk": 2,
+    "fields": { "name": "Sede Norte", "city": "Bogotá", "locality": "Usaquén", "area_m2": 8000 }
+  },
+  {
+    "model": "carbon_footprint.campus",
+    "pk": 3,
+    "fields": { "name": "Sede Sur", "city": "Bogotá", "locality": "Bosa", "area_m2": 6000 }
+  },
+
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 1,
+    "fields": {
+      "source": 1,
+      "agent": "Gasolina corriente",
+      "gas": "CO2",
+      "factor_value": 2.271,
+      "unit": "L",
+      "gwp_100yr": 1,
+      "source_ref": "IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 2,
+    "fields": {
+      "source": 1,
+      "agent": "Diésel / ACPM",
+      "gas": "CO2",
+      "factor_value": 2.676,
+      "unit": "L",
+      "gwp_100yr": 1,
+      "source_ref": "IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 3,
+    "fields": {
+      "source": 1,
+      "agent": "Gas natural",
+      "gas": "CO2",
+      "factor_value": 1.9,
+      "unit": "m3",
+      "gwp_100yr": 1,
+      "source_ref": "IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 4,
+    "fields": {
+      "source": 1,
+      "agent": "GLP",
+      "gas": "CO2",
+      "factor_value": 1.51,
+      "unit": "kg",
+      "gwp_100yr": 1,
+      "source_ref": "IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 5,
+    "fields": {
+      "source": 6,
+      "agent": "Electricidad UPME",
+      "gas": "CO2",
+      "factor_value": 0.144,
+      "unit": "kWh",
+      "gwp_100yr": 1,
+      "source_ref": "UPME/IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 6,
+    "fields": {
+      "source": 9,
+      "agent": "Relleno sanitario",
+      "gas": "CH4",
+      "factor_value": 1.2,
+      "unit": "kg",
+      "gwp_100yr": 25,
+      "source_ref": "IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 7,
+    "fields": {
+      "source": 9,
+      "agent": "Reciclaje",
+      "gas": "CO2",
+      "factor_value": 0.05,
+      "unit": "kg",
+      "gwp_100yr": 1,
+      "source_ref": "IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 8,
+    "fields": {
+      "source": 9,
+      "agent": "Compostaje",
+      "gas": "CH4",
+      "factor_value": 0.07,
+      "unit": "kg",
+      "gwp_100yr": 25,
+      "source_ref": "IDEAM 2023",
+      "year_applic": 2023
+    }
+  },
+  {
+    "model": "carbon_footprint.emissionfactor",
+    "pk": 9,
+    "fields": {
+      "source": 8,
+      "agent": "Papel A4",
+      "gas": "CO2",
+      "factor_value": 1.3,
+      "unit": "kg",
+      "gwp_100yr": 1,
+      "source_ref": "Ecoinvent 2023",
+      "year_applic": 2023
+    }
+  }
+]

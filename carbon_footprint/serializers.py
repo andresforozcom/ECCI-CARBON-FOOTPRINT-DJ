@@ -4,7 +4,7 @@ from .models import (
     FuelType, WasteType, ExtinguisherType, PaperWeightCatalog,
     ElectricityConsumption, NaturalGasConsumption, FuelConsumption,
     VehicleFleetConsumption, ExtinguisherRefill, WasteRecord,
-    PaperConsumption, PurchasedGoodsServices, Flight,
+    PaperConsumption, Flight,
     FieldPracticeTrip, RemovalRecord
 )
 
@@ -181,25 +181,6 @@ class PaperConsumptionSerializer(serializers.ModelSerializer):
             'size', 'size_id', 'reams'
         ]
 
-
-class PurchasedGoodsServicesSerializer(serializers.ModelSerializer):
-    period = PeriodSerializer(read_only=True)
-    campus = CampusSerializer(read_only=True)
-    emission_factor = EmissionFactorSerializer(read_only=True)
-
-    period_id = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all(), source='period', write_only=True)
-    campus_id = serializers.PrimaryKeyRelatedField(queryset=Campus.objects.all(), source='campus', write_only=True)
-    emission_factor_id = serializers.PrimaryKeyRelatedField(
-        queryset=EmissionFactor.objects.all(), source='emission_factor',
-        write_only=True, allow_null=True, required=False
-    )
-
-    class Meta:
-        model = PurchasedGoodsServices
-        fields = [
-            'id', 'period', 'period_id', 'campus', 'campus_id',
-            'good_service', 'amount', 'emission_factor', 'emission_factor_id'
-        ]
 
 
 class FlightSerializer(serializers.ModelSerializer):

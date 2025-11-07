@@ -7,6 +7,6 @@ admin.site.register([
     FuelType, WasteType, ExtinguisherType, PaperWeightCatalog,
     ElectricityConsumption, NaturalGasConsumption, FuelConsumption,
     VehicleFleetConsumption, ExtinguisherRefill, WasteRecord,
-    PaperConsumption, PurchasedGoodsServices, Flight,
+    PaperConsumption, Flight,
     FieldPracticeTrip, RemovalRecord
 ])
