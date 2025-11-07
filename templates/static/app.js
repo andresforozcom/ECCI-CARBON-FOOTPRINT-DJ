@@ -7,33 +7,38 @@
   const apiBase = (body.dataset.apiBase || '/api/').replace(/\/$/, '');
   const catalogCache = new Map();
 
+  const monthFormatter = new Intl.DateTimeFormat('es', { month: 'long' });
+
+  const normalise = (text) =>
+    (text || '')
+      .toString()
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s\/]/g, '');
+
   const HEADER_CATALOG_MAP = [
     {
-      header: 'combustible',
+      matches: ['combustible', 'medio de transporte', 'combustible utilizado'].map(normalise),
       endpoint: 'fuel-types',
       valueField: 'fuel_code',
       label: (item) => `${item.description} (${item.fuel_code})`
     },
     {
-      header: 'medio de transporte / combustible',
-      endpoint: 'fuel-types',
-      valueField: 'fuel_code',
-      label: (item) => `${item.description} (${item.fuel_code})`
-    },
-    {
-      header: 'agente utilizado',
+      matches: ['agente utilizado', 'tipo de agente'].map(normalise),
       endpoint: 'extinguisher-types',
       valueField: 'ext_code',
       label: (item) => `${item.description} (${item.ext_code})`
     },
     {
-      header: 'consumo de papel',
+      matches: ['consumo de papel', 'formato de papel'].map(normalise),
       endpoint: 'paper-weight',
       valueField: 'size',
       label: (item) => `${item.size} · ${item.kg_per_ream} kg/paq.`
     },
     {
-      header: 'tratamiento y/o disposicion final de residuos',
+      matches: ['tratamiento y/o disposicion final de residuos', 'tipo de residuo'].map(normalise),
       endpoint: 'waste-types',
       valueField: 'waste_code',
       label: (item) => `${item.description} (${item.waste_code})`
@@ -49,13 +54,9 @@
     paperWeights: 'paper-weight'
   };
 
-  const monthFormatter = new Intl.DateTimeFormat('es', { month: 'long' });
+  const capitalise = (text) => (text ? text.charAt(0).toUpperCase() + text.slice(1) : '');
 
-  function capitalise(text) {
-    return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
-  }
-
-  function formatPeriodLabel(period) {
+  const formatPeriodLabel = (period) => {
     if (!period) {
       return '';
     }
@@ -66,50 +67,8 @@
     }
 
     return `Anual ${period.year}`;
-  }
+  };
 
-  function normalise(value) {
-    return value ? value.toLowerCase().normalize('NFD').replace(/[^\p{Letter}\p{Number}]+/gu, ' ').trim() : '';
-  }
-
-  async function fetchCatalog(endpoint) {
-    if (!endpoint) {
-      return [];
-    }
-
-    if (catalogCache.has(endpoint)) {
-      return catalogCache.get(endpoint);
-    }
-
-    const response = await fetch(`${apiBase}/${endpoint}/`, {
-      headers: { Accept: 'application/json' }
-    });
-
-    if (!response.ok) {
-      throw new Error(`No se pudo obtener la información de ${endpoint} (${response.status})`);
-    }
-
-    const data = await response.json();
-    catalogCache.set(endpoint, data);
-    return data;
-  }
-
-  function populateSelect(select, options, config) {
-    if (!select) {
-      return;
-    }
-
-    const existingValue = select.value;
-    select.innerHTML = '';
-
-    const placeholder = document.createElement('option');
-    placeholder.value = '';
-    placeholder.textContent = 'Seleccione';
-    select.appendChild(placeholder);
-
-    options.forEach((item) => {
-      const option = document.createElement('option');
-      option.value = `${item[config.valueField]}`;
   const SELECT_SOURCE_CONFIG = {
     periods: {
       endpoint: 'periods',
@@ -174,10 +133,17 @@
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
         { name: 'fuel_code_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
         { name: 'gallons', label: 'Consumo (galones)', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'biogenic_co2', label: 'CO₂ biogénico (t)', type: 'number', step: '0.001', cast: 'float', placeholder: 'Opcional' }
+        {
+          name: 'biogenic_co2',
+          label: 'CO₂ biogénico (t)',
+          type: 'number',
+          step: '0.001',
+          cast: 'float',
+          placeholder: 'Opcional'
+        }
       ]
     },
-    vehicleFleet: {
+    fuelMobile: {
       endpoint: 'vehicle-fleet',
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
@@ -221,10 +187,16 @@
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
         { name: 'good_service', label: 'Bien o servicio', required: true, placeholder: 'Descripción del bien/servicio' },
         { name: 'amount', label: 'Monto (COP)', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'emission_factor_id', label: 'Factor de emisión (opcional)', type: 'select', source: 'emissionFactors', placeholder: 'Sin factor específico' }
+        {
+          name: 'emission_factor_id',
+          label: 'Factor de emisión (opcional)',
+          type: 'select',
+          source: 'emissionFactors',
+          placeholder: 'Sin factor específico'
+        }
       ]
     },
-    flight: {
+    flights: {
       endpoint: 'flights',
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
@@ -247,7 +219,7 @@
         { name: 'fuel_code_id', label: 'Combustible utilizado', type: 'select', source: 'fuelTypes', required: true }
       ]
     },
-    removal: {
+    removals: {
       endpoint: 'removals',
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
@@ -258,155 +230,14 @@
     }
   };
 
-
-
-  const normalise = (text) =>
-    text
-      .trim()
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9\s\/]/g, '');
-
-  async function fetchCatalog(endpoint) {
-    if (!catalogCache.has(endpoint)) {
-      const url = `${apiBase}/${endpoint}/`;
-      const response = await fetch(url, {
-        headers: {
-          Accept: 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`No fue posible cargar ${endpoint} (${response.status})`);
-      }
-
-      const data = await response.json();
-      catalogCache.set(endpoint, Array.isArray(data) ? data : data.results || []);
-    }
-
-    return catalogCache.get(endpoint);
-  }
-
-  function populateSelect(select, options, config) {
-    const previous = select.value;
-
-    while (select.options.length > 1) {
-      select.remove(1);
-    }
-
-    options.forEach((item) => {
-      const option = document.createElement('option');
-      option.value = item[config.valueField];
-      option.textContent = config.label(item);
-      select.appendChild(option);
-    });
-
-    if (existingValue) {
-      const hasValue = options.some((item) => `${item[config.valueField]}` === existingValue);
-      select.value = hasValue ? existingValue : '';
-    if (previous) {
-      const stillExists = options.some((item) => `${item[config.valueField]}` === previous);
-      select.value = stillExists ? previous : '';
-    } else {
-      select.value = '';
-    }
-  }
-
-  async function hydrateTable(table) {
-    const headers = Array.from(table.querySelectorAll('thead th')).map((th) => normalise(th.textContent));
-
-    for (let columnIndex = 0; columnIndex < headers.length; columnIndex += 1) {
-      const headerText = headers[columnIndex];
-      const catalog = HEADER_CATALOG_MAP.find((entry) => headerText.includes(entry.header));
-
-      if (!catalog) {
-        continue;
-      }
-
-      let options = [];
-
-      try {
-        options = await fetchCatalog(catalog.endpoint);
-      } catch (error) {
-        console.error(error);
-        continue;
-      }
-
-      const cells = table.querySelectorAll(`tbody tr td:nth-child(${columnIndex + 1}) select`);
-
-      cells.forEach((select) => {
-        populateSelect(select, options, catalog);
-      });
-    }
-  }
-
-  function hydrateAllTables() {
-    const tables = document.querySelectorAll('table.emisiones-table');
-    tables.forEach((table) => {
-      hydrateTable(table);
-    });
-  }
-
-  function resetRowInputs(row) {
-    row.querySelectorAll('input').forEach((input) => {
-      if (input.type === 'checkbox' || input.type === 'radio') {
-        input.checked = input.defaultChecked;
-      } else {
-        input.value = '';
-      }
-    });
-
-    row.querySelectorAll('select').forEach((select) => {
-      if (select.options.length > 0) {
-        select.selectedIndex = 0;
-      } else {
-        select.value = '';
-      }
-    });
-  }
-
-  function setCellValue(cell, value, display) {
-    const input = cell.querySelector('input');
-    const select = cell.querySelector('select');
-
-    if (input) {
-      input.value = value ?? '';
-      return;
-    }
-
-    if (select) {
-      const valueStr = value == null ? '' : `${value}`;
-      if (!valueStr) {
-        select.selectedIndex = 0;
-        return;
-      }
-
-      const existingOption = Array.from(select.options).find((option) => option.value === valueStr);
-      if (existingOption) {
-        select.value = valueStr;
-        return;
-      }
-
-      const option = document.createElement('option');
-      option.value = valueStr;
-      option.textContent = display || valueStr;
-      option.selected = true;
-      select.appendChild(option);
-      return;
-    }
-
-    cell.textContent = value ?? '';
-  }
-
-  function formatNumber(value, decimals = 3) {
+  const formatNumber = (value, decimals = 3) => {
     if (value === null || value === undefined || Number.isNaN(Number(value))) {
       return '';
     }
     return Number(value).toFixed(decimals);
-  }
+  };
 
-  function formatRecordContext(record, extra) {
+  const formatRecordContext = (record, extra) => {
     const parts = [];
     if (record.campus && record.campus.name) {
       parts.push(record.campus.name);
@@ -418,7 +249,7 @@
       parts.push(extra);
     }
     return parts.join(' · ');
-  }
+  };
 
   const TABLE_DATA_CONFIG = {
     fuelStationary: {
@@ -463,8 +294,8 @@
     electricity: {
       endpoint: 'electricity',
       mapRecord: (record) => [
-        formatPeriodLabel(record.period),
-        { value: record.campus?.id, display: record.campus?.name },
+        formatRecordContext(record),
+        record.operator || '',
         { value: 'kwh', display: 'kWh' },
         formatNumber(record.kwh),
         '',
@@ -527,7 +358,6 @@
       mapRecord: (record) => [
         record.rtype || '',
         record.campus?.name || '',
-        { value: 'tco2e', display: 'tCO₂e' },
         formatNumber(record.tco2e),
         '',
         ''
@@ -535,7 +365,147 @@
     }
   };
 
-  async function populateTableFromRecords(table, config) {
+  const fetchCatalog = async (endpoint, { force = false } = {}) => {
+    if (!endpoint) {
+      return [];
+    }
+
+    if (!force && catalogCache.has(endpoint)) {
+      return catalogCache.get(endpoint);
+    }
+
+    const response = await fetch(`${apiBase}/${endpoint}/`, {
+      headers: { Accept: 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error(`No se pudo obtener la información de ${endpoint} (${response.status})`);
+    }
+
+    const data = await response.json();
+    const results = Array.isArray(data) ? data : data.results || [];
+    catalogCache.set(endpoint, results);
+    return results;
+  };
+
+  const populateSelectElement = (select, options, config) => {
+    if (!select) {
+      return;
+    }
+
+    const previousValue = select.value;
+    select.innerHTML = '';
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Seleccione';
+    select.appendChild(placeholder);
+
+    options.forEach((item) => {
+      const option = document.createElement('option');
+      option.value = `${item[config.valueField]}`;
+      option.textContent = config.label(item);
+      select.appendChild(option);
+    });
+
+    if (previousValue) {
+      const exists = options.some((item) => `${item[config.valueField]}` === previousValue);
+      select.value = exists ? previousValue : '';
+    }
+  };
+
+  const hydrateTable = async (table) => {
+    const headers = Array.from(table.querySelectorAll('thead th')).map((th) => normalise(th.textContent));
+
+    for (let columnIndex = 0; columnIndex < headers.length; columnIndex += 1) {
+      const header = headers[columnIndex];
+      const catalog = HEADER_CATALOG_MAP.find((entry) =>
+        entry.matches.some((match) => header.includes(match))
+      );
+
+      if (!catalog) {
+        continue;
+      }
+
+      let options = [];
+
+      try {
+        options = await fetchCatalog(catalog.endpoint);
+      } catch (error) {
+        console.error(error);
+        continue;
+      }
+
+      const selects = table.querySelectorAll(`tbody tr td:nth-child(${columnIndex + 1}) select`);
+      selects.forEach((select) => {
+        populateSelectElement(select, options, catalog);
+      });
+    }
+  };
+
+  const hydrateAllTables = () => {
+    const tables = document.querySelectorAll('table.emisiones-table');
+    tables.forEach((table) => {
+      hydrateTable(table).catch((error) => console.error(error));
+    });
+  };
+
+  const resetRowInputs = (row) => {
+    row.querySelectorAll('input').forEach((input) => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        input.checked = input.defaultChecked;
+      } else {
+        input.value = '';
+      }
+    });
+
+    row.querySelectorAll('select').forEach((select) => {
+      if (select.options.length > 0) {
+        select.selectedIndex = 0;
+      } else {
+        select.value = '';
+      }
+    });
+  };
+
+  const setCellValue = (cell, value, display) => {
+    const input = cell.querySelector('input');
+    const select = cell.querySelector('select');
+
+    if (input) {
+      if (input.type === 'checkbox') {
+        input.checked = Boolean(value);
+      } else {
+        input.value = value ?? '';
+      }
+      return;
+    }
+
+    if (select) {
+      const valueStr = value == null ? '' : `${value}`;
+      if (!valueStr) {
+        select.selectedIndex = 0;
+        return;
+      }
+
+      const existing = Array.from(select.options).find((option) => option.value === valueStr);
+      if (existing) {
+        select.value = valueStr;
+        return;
+      }
+
+      const option = document.createElement('option');
+      option.value = valueStr;
+      option.textContent = display || valueStr;
+      option.selected = true;
+      select.appendChild(option);
+      return;
+    }
+
+    cell.textContent = value ?? '';
+  };
+
+  const populateTableFromRecords = async (table, config) => {
     const tbody = table.querySelector('tbody');
     if (!tbody) {
       return;
@@ -550,7 +520,7 @@
 
     let records = [];
     try {
-      records = await fetchCatalog(config.endpoint);
+      records = await fetchCatalog(config.endpoint, { force: true });
     } catch (error) {
       console.error(error);
       return;
@@ -562,6 +532,7 @@
       const emptyRow = template.cloneNode(true);
       resetRowInputs(emptyRow);
       tbody.appendChild(emptyRow);
+      await hydrateTable(table);
       return;
     }
 
@@ -577,7 +548,7 @@
           return;
         }
 
-        if (entry && typeof entry === 'object' && 'value' in entry) {
+        if (entry && typeof entry === 'object' && Object.prototype.hasOwnProperty.call(entry, 'value')) {
           setCellValue(cell, entry.value, entry.display);
         } else {
           setCellValue(cell, entry);
@@ -586,14 +557,17 @@
 
       tbody.appendChild(row);
     });
-  }
 
-  function initTableDataLoaders() {
+    await hydrateTable(table);
+  };
+
+  const initTableDataLoaders = () => {
     const buttons = document.querySelectorAll('.subtab[data-record-key]');
 
     const loadForButton = async (button) => {
       const key = button.dataset.recordKey;
       const subId = button.dataset.sub;
+
       if (!key || !subId) {
         return;
       }
@@ -613,7 +587,11 @@
         return;
       }
 
-      await populateTableFromRecords(table, config);
+      try {
+        await populateTableFromRecords(table, config);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     buttons.forEach((button) => {
@@ -625,22 +603,21 @@
     document.querySelectorAll('.subtab.active[data-record-key]').forEach((button) => {
       loadForButton(button);
     });
+  };
 
-  function clearElement(element) {
+  const clearElement = (element) => {
     while (element.firstChild) {
       element.removeChild(element.firstChild);
     }
-  }
+  };
 
-  async function populateSelectFromSource(select, sourceKey, fieldConfig = {}) {
+  const populateSelectFromSource = async (select, sourceKey, fieldConfig = {}) => {
     const source = SELECT_SOURCE_CONFIG[sourceKey];
-
     if (!source) {
       return;
     }
 
     let items = [];
-
     try {
       items = await fetchCatalog(source.endpoint);
     } catch (error) {
@@ -648,32 +625,41 @@
       return;
     }
 
+    const previousValue = select.value;
+
+    while (select.options.length > 1) {
+      select.remove(1);
+    }
+
     const labelFn = fieldConfig.optionLabel || source.label;
     const valueFn = fieldConfig.optionValue || source.value;
-    const fragment = document.createDocumentFragment();
 
     items.forEach((item) => {
       const option = document.createElement('option');
       option.value = `${valueFn(item)}`;
       option.textContent = labelFn(item);
-      fragment.appendChild(option);
+      select.appendChild(option);
     });
 
-    select.appendChild(fragment);
-
     if (fieldConfig.default !== undefined) {
-      const value = `${fieldConfig.default}`;
-      const defaultOption = Array.from(select.options).find((option) => option.value === value);
+      const defaultValue = `${fieldConfig.default}`;
+      const defaultOption = Array.from(select.options).find((option) => option.value === defaultValue);
       if (defaultOption) {
         defaultOption.defaultSelected = true;
-        select.value = value;
+        select.value = defaultValue;
+        return;
       }
+    }
+
+    if (previousValue) {
+      const exists = items.some((item) => `${valueFn(item)}` === previousValue);
+      select.value = exists ? previousValue : '';
     } else {
       select.selectedIndex = 0;
     }
-  }
+  };
 
-  function getCsrfToken() {
+  const getCsrfToken = () => {
     const meta = document.querySelector('meta[name="csrf-token"]');
     if (meta && meta.content) {
       return meta.content;
@@ -681,9 +667,9 @@
 
     const match = document.cookie.match(/csrftoken=([^;]+)/);
     return match ? decodeURIComponent(match[1]) : null;
-  }
+  };
 
-  async function renderRecordForm(recordKey) {
+  const renderRecordForm = async (recordKey) => {
     const form = document.getElementById('recordForm');
     const selector = document.getElementById('recordType');
 
@@ -699,7 +685,9 @@
       form.hidden = true;
       form.dataset.endpoint = '';
       form.dataset.recordKey = '';
-      clearElement(fieldsWrapper);
+      if (fieldsWrapper) {
+        clearElement(fieldsWrapper);
+      }
       if (status) {
         status.textContent = '';
         status.classList.remove('success', 'error');
@@ -716,12 +704,18 @@
       status.classList.remove('success', 'error');
     }
 
-    clearElement(fieldsWrapper);
-    fieldsWrapper.classList.toggle('two-cols', config.fields.length > 3);
+    if (fieldsWrapper) {
+      clearElement(fieldsWrapper);
+      fieldsWrapper.classList.toggle('two-cols', (config.fields || []).length > 3);
+    }
 
     const asyncTasks = [];
 
-    config.fields.forEach((field) => {
+    (config.fields || []).forEach((field) => {
+      if (!fieldsWrapper) {
+        return;
+      }
+
       const wrapper = document.createElement('div');
       wrapper.className = 'form-field';
 
@@ -806,13 +800,13 @@
     });
 
     try {
-      await Promise.all(asyncTasks.map((task) => task.catch((error) => console.error(error))));
+      await Promise.all(asyncTasks);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
-  function extractErrorMessage(errorResponse, fallback) {
+  const extractErrorMessage = (errorResponse, fallback) => {
     if (!errorResponse) {
       return fallback;
     }
@@ -828,13 +822,24 @@
     if (typeof errorResponse === 'object') {
       return Object.entries(errorResponse)
         .map(([key, value]) => `${key}: ${extractErrorMessage(value, '')}`)
-        .join(' ');
+        .join(' ')
+        .trim() || fallback;
     }
 
     return fallback;
-  }
+  };
 
-  async function submitRecordForm(event) {
+  const refreshTablesForRecord = (recordKey) => {
+    document.querySelectorAll(`table[data-record-key="${recordKey}"]`).forEach((table) => {
+      const config = TABLE_DATA_CONFIG[recordKey];
+      if (!config) {
+        return;
+      }
+      populateTableFromRecords(table, config).catch((error) => console.error(error));
+    });
+  };
+
+  const submitRecordForm = async (event) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -843,7 +848,7 @@
     const recordKey = form.dataset.recordKey;
     const config = RECORD_CONFIG[recordKey];
 
-    if (!endpoint || !config) {
+    if (!endpoint || !config || !config.fields) {
       return;
     }
 
@@ -860,7 +865,6 @@
 
     config.fields.forEach((field) => {
       const input = form.elements[field.name];
-
       if (!input) {
         return;
       }
@@ -930,11 +934,16 @@
       }
 
       form.reset();
+      catalogCache.delete(endpoint);
 
       if (status) {
         status.textContent = 'Registro guardado correctamente.';
         status.classList.remove('error');
         status.classList.add('success');
+      }
+
+      if (recordKey) {
+        refreshTablesForRecord(recordKey);
       }
     } catch (error) {
       console.error(error);
@@ -947,9 +956,9 @@
     } finally {
       form.classList.remove('loading');
     }
-  }
+  };
 
-  function initDataEntryForm() {
+  const initDataEntryForm = () => {
     const selector = document.getElementById('recordType');
     const form = document.getElementById('recordForm');
 
@@ -972,7 +981,7 @@
         return;
       }
 
-      renderRecordForm(value);
+      renderRecordForm(value).catch((error) => console.error(error));
     });
 
     const resetButton = form.querySelector('[data-reset]');
@@ -988,9 +997,9 @@
     }
 
     form.addEventListener('submit', submitRecordForm);
-  }
+  };
 
-  async function downloadData() {
+  const downloadData = async () => {
     const entries = Object.entries(DOWNLOAD_ENDPOINTS);
     const result = {};
 
@@ -1016,16 +1025,21 @@
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
-  }
+  };
+
+  const initDownloadButton = () => {
+    const downloadButton = document.getElementById('downloadBtn');
+    if (!downloadButton) {
+      return;
+    }
+
+    downloadButton.addEventListener('click', downloadData);
+  };
 
   document.addEventListener('DOMContentLoaded', () => {
     hydrateAllTables();
     initTableDataLoaders();
-
-
-    const downloadButton = document.getElementById('downloadBtn');
-    if (downloadButton) {
-      downloadButton.addEventListener('click', downloadData);
-    }
+    initDataEntryForm();
+    initDownloadButton();
   });
 })();
