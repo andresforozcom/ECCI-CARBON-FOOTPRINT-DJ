@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Herramienta Huella de Carbono · ECCI (Prototipo)</title>
   <meta name="description" content="Prototipo - Menú principal y pantallas de Emisiones. ECCI." />
+
+  <meta name="csrf-token" content="{{ csrf_token }}" />
+
   <link rel="stylesheet" href="{% static 'estilo.css' %}" />
   <script src="{% static 'app.js' %}" defer></script>
 </head>
@@ -826,6 +829,37 @@
           <button id="saveLocal" class="tab">Guardar local</button>
           <button id="loadLocal" class="tab">Cargar local</button>
         </div>
+      </div>
+
+      <div class="form-card" id="data-entry">
+        <h3 style="margin-top:16px;margin-bottom:8px;color:var(--ecci-blue)">Registrar datos operativos</h3>
+        <p class="muted" style="margin-top:0;margin-bottom:14px">Los registros se envían directamente a la base de datos mediante los servicios REST existentes.</p>
+        <div class="field">
+          <label for="recordType">Tipo de registro</label>
+          <select id="recordType" class="form-select">
+            <option value="">Selecciona un tipo</option>
+            <option value="electricity">Consumo de electricidad</option>
+            <option value="naturalGas">Consumo de gas natural</option>
+            <option value="fuelStationary">Combustibles - fuentes estacionarias</option>
+            <option value="vehicleFleet">Combustibles - fuentes móviles</option>
+            <option value="extinguisherRefill">Recarga de extintores</option>
+            <option value="waste">Residuos sólidos</option>
+            <option value="paper">Consumo de papel</option>
+            <option value="purchases">Bienes y servicios adquiridos</option>
+            <option value="flight">Viajes aéreos</option>
+            <option value="fieldPractice">Prácticas de campo / desplazamientos</option>
+            <option value="removal">Remociones y compensaciones</option>
+          </select>
+        </div>
+
+        <form id="recordForm" class="api-form" novalidate hidden>
+          <div class="form-grid" data-form-fields></div>
+          <div class="form-actions">
+            <button type="submit" class="tab">Guardar registro</button>
+            <button type="button" class="tab ghost" data-reset>Limpiar</button>
+          </div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </aside>
   </div>
