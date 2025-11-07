@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-
 from django.middleware.csrf import get_token
+
 
 
 from rest_framework import viewsets, permissions
@@ -32,7 +32,6 @@ from .serializers import (
 @require_GET
 def dashboard(request):
     """Renderiza la interfaz principal del prototipo."""
-
     # Garantiza que el token CSRF se emita para peticiones POST subsecuentes
     get_token(request)
 

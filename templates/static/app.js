@@ -68,6 +68,48 @@
     return `Anual ${period.year}`;
   }
 
+  function normalise(value) {
+    return value ? value.toLowerCase().normalize('NFD').replace(/[^\p{Letter}\p{Number}]+/gu, ' ').trim() : '';
+  }
+
+  async function fetchCatalog(endpoint) {
+    if (!endpoint) {
+      return [];
+    }
+
+    if (catalogCache.has(endpoint)) {
+      return catalogCache.get(endpoint);
+    }
+
+    const response = await fetch(`${apiBase}/${endpoint}/`, {
+      headers: { Accept: 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error(`No se pudo obtener la información de ${endpoint} (${response.status})`);
+    }
+
+    const data = await response.json();
+    catalogCache.set(endpoint, data);
+    return data;
+  }
+
+  function populateSelect(select, options, config) {
+    if (!select) {
+      return;
+    }
+
+    const existingValue = select.value;
+    select.innerHTML = '';
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Seleccione';
+    select.appendChild(placeholder);
+
+    options.forEach((item) => {
+      const option = document.createElement('option');
+      option.value = `${item[config.valueField]}`;
   const SELECT_SOURCE_CONFIG = {
     periods: {
       endpoint: 'periods',
@@ -260,6 +302,9 @@
       select.appendChild(option);
     });
 
+    if (existingValue) {
+      const hasValue = options.some((item) => `${item[config.valueField]}` === existingValue);
+      select.value = hasValue ? existingValue : '';
     if (previous) {
       const stillExists = options.some((item) => `${item[config.valueField]}` === previous);
       select.value = stillExists ? previous : '';
@@ -279,7 +324,8 @@
         continue;
       }
 
-      let options;
+      let options = [];
+
       try {
         options = await fetchCatalog(catalog.endpoint);
       } catch (error) {
@@ -302,6 +348,283 @@
     });
   }
 
+  function resetRowInputs(row) {
+    row.querySelectorAll('input').forEach((input) => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        input.checked = input.defaultChecked;
+      } else {
+        input.value = '';
+      }
+    });
+
+    row.querySelectorAll('select').forEach((select) => {
+      if (select.options.length > 0) {
+        select.selectedIndex = 0;
+      } else {
+        select.value = '';
+      }
+    });
+  }
+
+  function setCellValue(cell, value, display) {
+    const input = cell.querySelector('input');
+    const select = cell.querySelector('select');
+
+    if (input) {
+      input.value = value ?? '';
+      return;
+    }
+
+    if (select) {
+      const valueStr = value == null ? '' : `${value}`;
+      if (!valueStr) {
+        select.selectedIndex = 0;
+        return;
+      }
+
+      const existingOption = Array.from(select.options).find((option) => option.value === valueStr);
+      if (existingOption) {
+        select.value = valueStr;
+        return;
+      }
+
+      const option = document.createElement('option');
+      option.value = valueStr;
+      option.textContent = display || valueStr;
+      option.selected = true;
+      select.appendChild(option);
+      return;
+    }
+
+    cell.textContent = value ?? '';
+  }
+
+  function formatNumber(value, decimals = 3) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) {
+      return '';
+    }
+    return Number(value).toFixed(decimals);
+  }
+
+  function formatRecordContext(record, extra) {
+    const parts = [];
+    if (record.campus && record.campus.name) {
+      parts.push(record.campus.name);
+    }
+    if (record.period) {
+      parts.push(formatPeriodLabel(record.period));
+    }
+    if (extra) {
+      parts.push(extra);
+    }
+    return parts.join(' · ');
+  }
+
+  const TABLE_DATA_CONFIG = {
+    fuelStationary: {
+      endpoint: 'fuel',
+      mapRecord: (record) => [
+        formatRecordContext(record),
+        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
+        { value: 'gal', display: 'Galones' },
+        formatNumber(record.gallons),
+        formatNumber(record.biogenic_co2),
+        '',
+        ''
+      ]
+    },
+    fuelMobile: {
+      endpoint: 'vehicle-fleet',
+      mapRecord: (record) => [
+        formatRecordContext(
+          record,
+          record.km_traveled ? `${formatNumber(record.km_traveled, 2)} km` : ''
+        ),
+        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
+        { value: 'gal', display: 'Galones' },
+        formatNumber(record.gallons),
+        '',
+        '',
+        ''
+      ]
+    },
+    extinguisherRefill: {
+      endpoint: 'extinguisher-refill',
+      mapRecord: (record) => [
+        formatRecordContext(record),
+        { value: record.ext_code?.ext_code, display: record.ext_code?.description },
+        { value: 'kg', display: 'Kilogramos' },
+        formatNumber(record.mass_kg),
+        '',
+        '',
+        ''
+      ]
+    },
+    electricity: {
+      endpoint: 'electricity',
+      mapRecord: (record) => [
+        formatPeriodLabel(record.period),
+        { value: record.campus?.id, display: record.campus?.name },
+        { value: 'kwh', display: 'kWh' },
+        formatNumber(record.kwh),
+        '',
+        '',
+        ''
+      ]
+    },
+    flights: {
+      endpoint: 'flights',
+      mapRecord: (record) => [
+        `${record.origin || ''} → ${record.destination || ''}`.trim(),
+        record.roundtrip === false
+          ? { value: 'oneway', display: 'Solo ida' }
+          : { value: 'roundtrip', display: 'Ida y vuelta' },
+        { value: 'kgco2e', display: 'kg CO₂e' },
+        '',
+        formatNumber(record.co2_kg),
+        '',
+        ''
+      ]
+    },
+    fieldPractice: {
+      endpoint: 'field-practice',
+      mapRecord: (record) => [
+        `${record.origin || ''} → ${record.destination || ''}`.trim(),
+        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
+        { value: 'km', display: 'Kilómetros' },
+        formatNumber(record.total_km, 2),
+        '',
+        '',
+        ''
+      ]
+    },
+    paper: {
+      endpoint: 'paper',
+      mapRecord: (record) => [
+        formatRecordContext(record),
+        { value: record.size?.size, display: record.size?.size },
+        { value: 'reams', display: 'Resmas' },
+        record.reams != null ? `${record.reams}` : '',
+        '',
+        '',
+        ''
+      ]
+    },
+    waste: {
+      endpoint: 'waste',
+      mapRecord: (record) => [
+        formatRecordContext(record),
+        { value: record.waste_code?.waste_code, display: record.waste_code?.description },
+        { value: 'kg', display: 'Kilogramos' },
+        formatNumber(record.kg),
+        '',
+        '',
+        ''
+      ]
+    },
+    removals: {
+      endpoint: 'removals',
+      mapRecord: (record) => [
+        record.rtype || '',
+        record.campus?.name || '',
+        { value: 'tco2e', display: 'tCO₂e' },
+        formatNumber(record.tco2e),
+        '',
+        ''
+      ]
+    }
+  };
+
+  async function populateTableFromRecords(table, config) {
+    const tbody = table.querySelector('tbody');
+    if (!tbody) {
+      return;
+    }
+
+    const templateRow = tbody.querySelector('tr');
+    if (!templateRow) {
+      return;
+    }
+
+    const template = templateRow.cloneNode(true);
+
+    let records = [];
+    try {
+      records = await fetchCatalog(config.endpoint);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+    tbody.innerHTML = '';
+
+    if (!records.length) {
+      const emptyRow = template.cloneNode(true);
+      resetRowInputs(emptyRow);
+      tbody.appendChild(emptyRow);
+      return;
+    }
+
+    records.forEach((record) => {
+      const row = template.cloneNode(true);
+      resetRowInputs(row);
+      const cells = row.querySelectorAll('td');
+      const values = config.mapRecord(record) || [];
+
+      values.forEach((entry, index) => {
+        const cell = cells[index];
+        if (!cell) {
+          return;
+        }
+
+        if (entry && typeof entry === 'object' && 'value' in entry) {
+          setCellValue(cell, entry.value, entry.display);
+        } else {
+          setCellValue(cell, entry);
+        }
+      });
+
+      tbody.appendChild(row);
+    });
+  }
+
+  function initTableDataLoaders() {
+    const buttons = document.querySelectorAll('.subtab[data-record-key]');
+
+    const loadForButton = async (button) => {
+      const key = button.dataset.recordKey;
+      const subId = button.dataset.sub;
+      if (!key || !subId) {
+        return;
+      }
+
+      const config = TABLE_DATA_CONFIG[key];
+      if (!config) {
+        return;
+      }
+
+      const subScreen = document.getElementById(`sub-${subId}`);
+      if (!subScreen) {
+        return;
+      }
+
+      const table = subScreen.querySelector(`table[data-record-key="${key}"]`);
+      if (!table) {
+        return;
+      }
+
+      await populateTableFromRecords(table, config);
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        loadForButton(button);
+      });
+    });
+
+    document.querySelectorAll('.subtab.active[data-record-key]').forEach((button) => {
+      loadForButton(button);
+    });
 
   function clearElement(element) {
     while (element.firstChild) {
@@ -697,8 +1020,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     hydrateAllTables();
-
-    initDataEntryForm();
+    initTableDataLoaders();
 
 
     const downloadButton = document.getElementById('downloadBtn');
