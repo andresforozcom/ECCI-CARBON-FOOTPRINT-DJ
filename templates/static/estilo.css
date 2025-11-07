@@ -60,6 +60,103 @@
     background-color: #204b8c;
   }
 
+  .form-card {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  }
+
+  .form-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .form-grid.two-cols {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-field label {
+    font-size: 0.9rem;
+    color: var(--ecci-blue);
+    font-weight: 600;
+  }
+
+  .form-field input,
+  .form-field select,
+  .form-select {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    background: #fff;
+  }
+
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-select:focus {
+    outline: 2px solid rgba(0, 46, 93, 0.3);
+    border-color: rgba(0, 46, 93, 0.4);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--ecci-blue);
+  }
+
+  .checkbox-field input {
+    width: auto;
+  }
+
+  .tab.ghost {
+    background: transparent;
+    border: 1px solid rgba(0, 46, 93, 0.2);
+    color: var(--ecci-blue);
+  }
+
+  .tab.ghost:hover {
+    background: rgba(0, 46, 93, 0.08);
+  }
+
+  .api-form[hidden] {
+    display: none;
+  }
+
+  .api-form.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .form-status {
+    min-height: 20px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+  }
+
+  .form-status.success {
+    color: #166534;
+  }
+
+  .form-status.error {
+    color: #b91c1c;
+  }
+
     /* Paleta ECCI y estilo general */
     :root {
       --ecci-blue: #002E5D; /* principal */

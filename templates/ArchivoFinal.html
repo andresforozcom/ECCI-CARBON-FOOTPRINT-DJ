@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
 <head>
@@ -5,9 +6,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Herramienta Huella de Carbono · ECCI (Prototipo)</title>
   <meta name="description" content="Prototipo - Menú principal y pantallas de Emisiones. ECCI." />
-  <link rel="stylesheet" href="static/estilo.css" />
+  <meta name="csrf-token" content="{{ csrf_token }}" />
+  <link rel="stylesheet" href="{% static 'estilo.css' %}" />
+  <script src="{% static 'app.js' %}" defer></script>
 </head>
-<body>
+<body data-api-base="/api/">
   <div class="wrap">
     <header>
       <div class="brand">
@@ -113,10 +116,10 @@
           <p class="muted" style="text-align:center">Tabla editable para captura de consumos y cálculo de emisiones.</p>
 
           <div style="display:flex;justify-content:center;margin-top:12px;gap:8px;flex-wrap:wrap">
-            <button class="subtab active" data-sub="combustibles1">Consumo de combustibles (Fuentes Estacionarias)</button>
-            <button class="subtab" data-sub="combustibles2">Consumo de combustibles (Fuentes Móviles)</button>
+            <button class="subtab active" data-sub="combustibles1" data-record-key="fuelStationary">Consumo de combustibles (Fuentes Estacionarias)</button>
+            <button class="subtab" data-sub="combustibles2" data-record-key="fuelMobile">Consumo de combustibles (Fuentes Móviles)</button>
             <button class="subtab" data-sub="procesos">Procesos Industriales</button>
-            <button class="subtab" data-sub="emisiones1">Emisiones Fugitivas</button>
+            <button class="subtab" data-sub="emisiones1" data-record-key="extinguisherRefill">Emisiones Fugitivas</button>
             <button class="subtab" data-sub="emisiones2">Emisiones por Lubricantes</button>
           </div>
 
@@ -124,7 +127,7 @@
             <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="fuelStationary">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -168,7 +171,7 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="fuelMobile">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -256,7 +259,7 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="extinguisherRefill">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -347,20 +350,20 @@
           <p class="muted" style="text-align:center">Registro de emisiones indirectas asociadas al consumo energético y servicios.</p>
 
           <div style="display:flex;justify-content:center;margin-top:12px;gap:8px;flex-wrap:wrap">
-            <button class="subtab active" data-sub="electricidad">Electricidad</button>
-            <button class="subtab" data-sub="viajes">Viajes Aéreos</button>
-            <button class="subtab" data-sub="desplazamiento1">Desplazamiento terrestre de empleados</button>
+            <button class="subtab active" data-sub="electricidad" data-record-key="electricity">Electricidad</button>
+            <button class="subtab" data-sub="viajes" data-record-key="flights">Viajes Aéreos</button>
+            <button class="subtab" data-sub="desplazamiento1" data-record-key="fieldPractice">Desplazamiento terrestre de empleados</button>
             <button class="subtab" data-sub="desplazamiento2">Transporte terrestre de larga distancia</button>
             <button class="subtab" data-sub="hospedaje">Hospedaje</button>
-            <button class="subtab" data-sub="consumo">Consumo de Papel</button>
-            <button class="subtab" data-sub="residuos">Residuos</button>
+            <button class="subtab" data-sub="consumo" data-record-key="paper">Consumo de Papel</button>
+            <button class="subtab" data-sub="residuos" data-record-key="waste">Residuos</button>
           </div>
 
           <div id="sub-electricidad" class="subscreen active">
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="electricity">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -404,7 +407,7 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="flights">
               <thead>
                 <tr>
                   <th>Viaje</th>
@@ -448,7 +451,7 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="fieldPractice">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -492,7 +495,7 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="paper">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -536,7 +539,7 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="waste">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -580,7 +583,7 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="paper">
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -671,15 +674,15 @@
           <p class="muted" style="text-align:center">Registro de acciones de captura o compensación de CO₂.</p>
 
           <div style="display:flex;justify-content:center;margin-top:12px;gap:8px;flex-wrap:wrap">
-            <button class="subtab active" data-sub="reforestacion">Inventario forestal</button>
-            <button class="subtab" data-sub="captura-tecnologica">Residuos Aprovechables</button>
+            <button class="subtab active" data-sub="reforestacion" data-record-key="removals">Inventario forestal</button>
+            <button class="subtab" data-sub="captura-tecnologica" data-record-key="removals">Residuos Aprovechables</button>
           </div>
 
           <div id="sub-reforestacion" class="subscreen active">
             <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="removals">
               <thead>
                 <tr>
                   <th>Especie</th>
@@ -718,7 +721,7 @@
             <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table class="emisiones-table" data-record-key="removals">
               <thead>
                 <tr>
                   <th>Residuos Aprovechables</th>
@@ -825,6 +828,7 @@
           <button id="loadLocal" class="tab">Cargar local</button>
         </div>
       </div>
+
     </aside>
   </div>
 
@@ -990,10 +994,6 @@
       alert("Datos cargados.");
     });
 
-    // --- DESCARGAR DATOS ---
-    document.getElementById("downloadBtn").addEventListener("click", () => {
-      alert("Función de descarga completa en desarrollo.");
-    });
   });
 </script>
 
