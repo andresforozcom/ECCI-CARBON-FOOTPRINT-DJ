@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
 <head>
@@ -5,9 +6,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Herramienta Huella de Carbono · ECCI (Prototipo)</title>
   <meta name="description" content="Prototipo - Menú principal y pantallas de Emisiones. ECCI." />
-  <link rel="stylesheet" href="static/estilo.css" />
+  <link rel="stylesheet" href="{% static 'estilo.css' %}" />
+  <script src="{% static 'app.js' %}" defer></script>
 </head>
-<body>
+<body data-api-base="/api/">
   <div class="wrap">
     <header>
       <div class="brand">
