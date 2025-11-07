@@ -216,6 +216,8 @@
     }
   };
 
+
+
   const normalise = (text) =>
     text
       .trim()
@@ -299,6 +301,7 @@
       hydrateTable(table);
     });
   }
+
 
   function clearElement(element) {
     while (element.firstChild) {
@@ -694,7 +697,9 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     hydrateAllTables();
+
     initDataEntryForm();
+
 
     const downloadButton = document.getElementById('downloadBtn');
     if (downloadButton) {
