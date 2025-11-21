@@ -268,6 +268,7 @@
       defaults: { PCG_CH4: 28, PCG_N2O: 265 },
       fn: CARBON_FORMULAS.combustion_estacionaria,
       formula: '((A_m3 * FE_CO2 / 1000) + (A_m3 * FE_CH4 * PCG_CH4 / 1000) + (A_m3 * FE_N2O * PCG_N2O / 1000)) / 1000'
+
     },
     combustion_movil: {
       params: ['A_litros', 'FE_CO2', 'FE_CH4', 'FE_N2O', 'PCG_CH4', 'PCG_N2O'],
@@ -314,12 +315,14 @@
       params: ['N', 'captura_ha', 'densidad'],
       fn: CARBON_FORMULAS.remocion_forestal,
       formula: '(N / densidad) * captura_ha'
+
     },
     reciclaje: {
       params: ['masa_t', 'FE_CH4_res', 'GWP_CH4'],
       defaults: { GWP_CH4: 27 },
       fn: CARBON_FORMULAS.reciclaje,
       formula: 'masa_t * FE_CH4_res * (GWP_CH4 || 27)'
+
     }
   };
 
@@ -579,6 +582,9 @@
       console.info('[Carbon] Fórmula utilizada:', config.formula);
     }
 
+      return;
+    }
+
     let total = 0;
 
     table.querySelectorAll('tbody tr').forEach((row) => {
@@ -593,6 +599,7 @@
 
       if (values.some((value) => value === undefined)) {
         console.warn('[Carbon] Faltan datos para calcular la fila, se omite', rowValuesLog);
+      if (values.some((value) => value === undefined)) {
         return;
       }
 
@@ -600,12 +607,14 @@
 
       if (Number.isNaN(result)) {
         console.warn('[Carbon] Resultado inválido para la fila', rowValuesLog);
+
         return;
       }
 
       total += result;
 
       console.debug('[Carbon] Resultado de la fila:', result);
+
 
       const output = row.querySelector('[data-carbon-result]') || row.querySelector('input[disabled]');
       if (output) {
@@ -623,6 +632,7 @@
       if (uncertaintyCell && uncertaintyCell.tagName === 'TD') {
         uncertaintyCell.textContent = '+/- 0,000%';
       }
+
     }
   };
 
@@ -639,6 +649,7 @@
       : null;
 
     const actions = scopedActions || siblingActions;
+
     if (!actions) {
       return;
     }
@@ -699,6 +710,7 @@
     actions.querySelectorAll('[data-carbon-action]').forEach((button) => {
       const action = button.dataset.carbonAction;
       button.type = 'button';
+
       if (action === 'add-row') {
         button.addEventListener('click', addRow);
       } else if (action === 'remove-row') {
