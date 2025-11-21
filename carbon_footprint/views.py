@@ -111,22 +111,22 @@ class NaturalGasConsumptionViewSet(BasePermissionViewSet):
 
 
 class FuelConsumptionViewSet(BasePermissionViewSet):
-    queryset = FuelConsumption.objects.select_related('campus', 'period', 'fuel_code').all()
+    queryset = FuelConsumption.objects.select_related('campus', 'period', 'fuel_type').all()
     serializer_class = FuelConsumptionSerializer
 
 
 class VehicleFleetConsumptionViewSet(BasePermissionViewSet):
-    queryset = VehicleFleetConsumption.objects.select_related('campus', 'period', 'fuel_code').all()
+    queryset = VehicleFleetConsumption.objects.select_related('campus', 'period', 'fuel_type').all()
     serializer_class = VehicleFleetConsumptionSerializer
 
 
 class ExtinguisherRefillViewSet(BasePermissionViewSet):
-    queryset = ExtinguisherRefill.objects.select_related('campus', 'period', 'ext_code').all()
+    queryset = ExtinguisherRefill.objects.select_related('campus', 'period', 'ext_type').all()
     serializer_class = ExtinguisherRefillSerializer
 
 
 class WasteRecordViewSet(BasePermissionViewSet):
-    queryset = WasteRecord.objects.select_related('campus', 'period', 'waste_code').all()
+    queryset = WasteRecord.objects.select_related('campus', 'period', 'waste_type').all()
     serializer_class = WasteRecordSerializer
 
 
@@ -144,7 +144,7 @@ class FlightViewSet(BasePermissionViewSet):
 
 
 class FieldPracticeTripViewSet(BasePermissionViewSet):
-    queryset = FieldPracticeTrip.objects.select_related('campus', 'period', 'fuel_code').all()
+    queryset = FieldPracticeTrip.objects.select_related('campus', 'period').all()
     serializer_class = FieldPracticeTripSerializer
 
 
