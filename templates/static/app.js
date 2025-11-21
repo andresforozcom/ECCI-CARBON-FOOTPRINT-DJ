@@ -593,6 +593,7 @@
       if (uncertaintyCell && uncertaintyCell.tagName === 'TD') {
         uncertaintyCell.textContent = '+/- 0,000%';
       }
+
     }
   };
 
@@ -609,6 +610,7 @@
       : null;
 
     const actions = scopedActions || siblingActions;
+
     if (!actions) {
       return;
     }
@@ -669,6 +671,7 @@
     actions.querySelectorAll('[data-carbon-action]').forEach((button) => {
       const action = button.dataset.carbonAction;
       button.type = 'button';
+
       if (action === 'add-row') {
         button.addEventListener('click', addRow);
       } else if (action === 'remove-row') {
