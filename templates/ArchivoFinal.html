@@ -128,7 +128,14 @@
             <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="fuelStationary">
+            <table
+              class="emisiones-table"
+              data-record-key="fuelStationary"
+              data-carbon-formula="combustion_estacionaria"
+              data-default-fe-co2="1"
+              data-default-fe-ch4="1"
+              data-default-fe-n2o="1"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -145,8 +152,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="A_m3"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -154,16 +161,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -172,7 +179,14 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="fuelMobile">
+            <table
+              class="emisiones-table"
+              data-record-key="fuelMobile"
+              data-carbon-formula="combustion_movil"
+              data-default-fe-co2="1"
+              data-default-fe-ch4="1"
+              data-default-fe-n2o="1"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -189,8 +203,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="A_litros"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -198,16 +212,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -216,7 +230,11 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table
+              class="emisiones-table"
+              data-carbon-formula="procesos_industriales"
+              data-default-fe="1"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -233,8 +251,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="Q"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -242,16 +260,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -260,7 +278,12 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="extinguisherRefill">
+            <table
+              class="emisiones-table"
+              data-record-key="extinguisherRefill"
+              data-carbon-formula="fugitivas"
+              data-default-gwp="1"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -277,8 +300,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="m_kg"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -286,16 +309,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -304,7 +327,11 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table
+              class="emisiones-table"
+              data-carbon-formula="lubricantes"
+              data-default-fe="1"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -321,8 +348,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="actividad"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -330,16 +357,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -364,7 +391,12 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="electricity">
+            <table
+              class="emisiones-table"
+              data-record-key="electricity"
+              data-carbon-formula="electricidad"
+              data-default-fe-kg-kwh="0.001"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -381,8 +413,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="consumo_kwh"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -390,16 +422,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -408,7 +440,12 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="flights">
+            <table
+              class="emisiones-table"
+              data-record-key="flights"
+              data-carbon-formula="transporte_generico"
+              data-default-fe="0.15"
+            >
               <thead>
                 <tr>
                   <th>Viaje</th>
@@ -425,8 +462,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="dato_actividad"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -434,16 +471,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -452,7 +489,12 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="fieldPractice">
+            <table
+              class="emisiones-table"
+              data-record-key="fieldPractice"
+              data-carbon-formula="transporte_generico"
+              data-default-fe="0.12"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -469,8 +511,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="dato_actividad"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -478,16 +520,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -496,7 +538,12 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="paper">
+            <table
+              class="emisiones-table"
+              data-record-key="paper"
+              data-carbon-formula="transporte_generico"
+              data-default-fe="0.18"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -513,8 +560,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="dato_actividad"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -522,16 +569,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -540,7 +587,12 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="waste">
+            <table
+              class="emisiones-table"
+              data-record-key="waste"
+              data-carbon-formula="transporte_generico"
+              data-default-fe="0.02"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -557,8 +609,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="dato_actividad"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -566,16 +618,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -584,7 +636,12 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="paper">
+            <table
+              class="emisiones-table"
+              data-record-key="paper"
+              data-carbon-formula="papel_resmas"
+              data-default-fe="1"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -601,8 +658,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="resmas"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -610,16 +667,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -628,7 +685,11 @@
                         <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table">
+            <table
+              class="emisiones-table"
+              data-carbon-formula="residuos"
+              data-default-fe="1"
+            >
               <thead>
                 <tr>
                   <th>Descripción de la fuente</th>
@@ -645,8 +706,8 @@
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
                   <td><select><option value="">Unidad</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="masa"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -654,16 +715,16 @@
               <tfoot>
                 <tr>
                   <td colspan="4" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
           </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -683,7 +744,13 @@
             <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="removals">
+            <table
+              class="emisiones-table"
+              data-record-key="removals"
+              data-carbon-formula="remocion_forestal"
+              data-default-captura-ha="1"
+              data-default-densidad="1"
+            >
               <thead>
                 <tr>
                   <th>Especie</th>
@@ -696,8 +763,8 @@
               <tbody>
                 <tr>
                   <td><input type="text" placeholder="Especie"></td>
-                  <td><input type="number" placeholder="0" min="0"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" placeholder="0" min="0" data-carbon-field="N"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -705,15 +772,15 @@
               <tfoot>
                 <tr>
                   <td colspan="3" style="text-align:right;font-weight:700">Total</td>
-                  <td colspan="2">0,000</td>
+                  <td colspan="2" data-carbon-total>0,000</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
             </div>
             <p class="muted" style="text-align:center">Registro de árboles plantados y su captura estimada de CO₂.</p>
           </div>
@@ -722,7 +789,13 @@
             <p style="text-align:center;font-weight:700;color:var(--ecci-blue)">
               Emisiones biogénicas antropogénicas
             </p>
-            <table class="emisiones-table" data-record-key="removals">
+            <table
+              class="emisiones-table"
+              data-record-key="removals"
+              data-carbon-formula="reciclaje"
+              data-default-fe-ch4-res="1"
+              data-default-gwp-ch4="27"
+            >
               <thead>
                 <tr>
                   <th>Residuos Aprovechables</th>
@@ -737,8 +810,8 @@
                 <tr>
                   <td><input type="text" placeholder="Descripción"></td>
                   <td><select><option value="">Seleccione</option></select></td>
-                  <td><input type="number" step="0.001" placeholder="0.000"></td>
-                  <td><input type="number" step="0.001" placeholder="0.000" disabled></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" data-carbon-field="masa_t"></td>
+                  <td><input type="number" step="0.001" placeholder="0.000" disabled data-carbon-result></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                   <td><input type="text" placeholder="+/- 0,000%" disabled></td>
                 </tr>
@@ -746,16 +819,16 @@
               <tfoot>
                 <tr>
                   <td colspan="3" style="text-align:right;font-weight:700">Total</td>
-                  <td>0,000</td>
+                  <td data-carbon-total>0,000</td>
                   <td colspan="2">+/- 0,000%</td>
                 </tr>
               </tfoot>
             </table>
             <div class="action-buttons">
-              <button>Agregar fila</button>
-              <button>Eliminar fila</button>
-              <button>Calcular</button>
-              <button>Exportar CSV</button>
+              <button data-carbon-action="add-row">Agregar fila</button>
+              <button data-carbon-action="remove-row">Eliminar fila</button>
+              <button data-carbon-action="calculate">Calcular</button>
+              <button data-carbon-action="export">Exportar CSV</button>
             </div>
             <p class="muted" style="text-align:center">...</p>
           </div>
@@ -884,76 +957,6 @@
         subtab.classList.add("active");
         const targetSub = parentSection.querySelector(`#sub-${subId}`);
         if (targetSub) targetSub.classList.add("active");
-      });
-    });
-
-    // --- TABLAS (AGREGAR / ELIMINAR / CALCULAR / EXPORTAR) ---
-    document.querySelectorAll(".action-buttons").forEach(container => {
-      const table = container.previousElementSibling;
-      if (!table) return;
-
-      const addBtn = container.querySelector("button:nth-child(1)");
-      const delBtn = container.querySelector("button:nth-child(2)");
-      const calcBtn = container.querySelector("button:nth-child(3)");
-      const exportBtn = container.querySelector("button:nth-child(4)");
-
-      // Agregar fila
-      addBtn.addEventListener("click", () => {
-        const tbody = table.querySelector("tbody");
-        const firstRow = tbody.querySelector("tr");
-        if (!firstRow) return;
-        const newRow = firstRow.cloneNode(true);
-        newRow.querySelectorAll("input, select").forEach(el => {
-          if (el.tagName === "INPUT") el.value = "";
-          if (el.tagName === "SELECT") el.selectedIndex = 0;
-        });
-        tbody.appendChild(newRow);
-      });
-
-      // Eliminar última fila
-      delBtn.addEventListener("click", () => {
-        const tbody = table.querySelector("tbody");
-        if (tbody.rows.length > 1) tbody.deleteRow(-1);
-      });
-
-      // Calcular totales
-      calcBtn.addEventListener("click", () => {
-        const tbody = table.querySelector("tbody");
-        const tfoot = table.querySelector("tfoot td:nth-child(2), tfoot td:nth-last-child(3)");
-        let total = 0;
-
-        tbody.querySelectorAll("tr").forEach(row => {
-          const inputs = row.querySelectorAll("input[type='number']:not([disabled])");
-          if (inputs.length >= 2) {
-            const val = parseFloat(inputs[0].value) || 0;
-            // Emisiones calculadas simples (ejemplo multiplicando por factor fijo)
-            const result = val * 0.25;
-            const output = row.querySelector("input[disabled]");
-            if (output) output.value = result.toFixed(3);
-            total += result;
-          }
-        });
-
-        const totalCell = table.querySelector("tfoot td:nth-child(2), tfoot td:nth-last-child(3)");
-        if (totalCell) totalCell.textContent = total.toFixed(3);
-      });
-
-      // Exportar CSV
-      exportBtn.addEventListener("click", () => {
-        const rows = [...table.querySelectorAll("tr")];
-        const csv = rows.map(r =>
-          [...r.querySelectorAll("th,td")]
-            .map(c => '"' + (c.querySelector("input, select")?.value || c.textContent.trim()) + '"')
-            .join(",")
-        ).join("\n");
-
-        const blob = new Blob([csv], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${table.closest("section").id}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
       });
     });
 
