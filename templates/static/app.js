@@ -113,7 +113,7 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'operator', label: 'Operador (opcional)', placeholder: 'Nombre del operador' },
+        { name: 'description', label: 'Descripción (opcional)', placeholder: 'Descripción del consumo' },
         { name: 'kwh', label: 'Consumo (kWh)', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
@@ -122,7 +122,7 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'operator', label: 'Operador (opcional)', placeholder: 'Nombre del operador' },
+        { name: 'fuel_type_id', label: 'Tipo de combustible', type: 'select', source: 'fuelTypes', required: true },
         { name: 'm3', label: 'Consumo (m³)', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
@@ -131,16 +131,10 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'fuel_code_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
-        { name: 'gallons', label: 'Consumo (galones)', type: 'number', step: '0.01', required: true, cast: 'float' },
-        {
-          name: 'biogenic_co2',
-          label: 'CO₂ biogénico (t)',
-          type: 'number',
-          step: '0.001',
-          cast: 'float',
-          placeholder: 'Opcional'
-        }
+        { name: 'description', label: 'Descripción de la fuente', required: true },
+        { name: 'fuel_type_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'galones, litros...', required: true },
+        { name: 'amount', label: 'Consumo', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     fuelMobile: {
@@ -148,9 +142,11 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'fuel_code_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
-        { name: 'km_traveled', label: 'Kilómetros recorridos', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'gallons', label: 'Consumo (galones)', type: 'number', step: '0.01', required: true, cast: 'float' }
+        { name: 'description', label: 'Descripción de la fuente', required: true },
+        { name: 'fuel_type_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'galones, litros...', required: true },
+        { name: 'amount', label: 'Consumo', type: 'number', step: '0.01', required: true, cast: 'float' },
+        { name: 'km_traveled', label: 'Kilómetros recorridos', type: 'number', step: '0.01', cast: 'float' }
       ]
     },
     extinguisherRefill: {
@@ -158,8 +154,10 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'ext_code_id', label: 'Tipo de agente', type: 'select', source: 'extinguisherTypes', required: true },
-        { name: 'mass_kg', label: 'Masa recargada (kg)', type: 'number', step: '0.01', required: true, cast: 'float' }
+        { name: 'description', label: 'Descripción', required: true },
+        { name: 'ext_type_id', label: 'Tipo de agente', type: 'select', source: 'extinguisherTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'kg', required: true, default: 'kg' },
+        { name: 'amount', label: 'Cantidad', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     waste: {
@@ -167,8 +165,9 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'waste_code_id', label: 'Tipo de residuo', type: 'select', source: 'wasteTypes', required: true },
-        { name: 'kg', label: 'Residuos (kg)', type: 'number', step: '0.01', required: true, cast: 'float' }
+        { name: 'waste_type_id', label: 'Tipo de residuo', type: 'select', source: 'wasteTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'kg', required: true, default: 'kg' },
+        { name: 'amount', label: 'Cantidad', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     paper: {
@@ -176,6 +175,7 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
+        { name: 'description', label: 'Descripción (opcional)', placeholder: 'Área o responsable' },
         { name: 'size_id', label: 'Formato de papel', type: 'select', source: 'paperWeights', required: true },
         { name: 'reams', label: 'Cantidad (resmas)', type: 'number', step: '1', min: '0', required: true, cast: 'int' }
       ]
@@ -212,11 +212,11 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
+        { name: 'description', label: 'Descripción (opcional)', placeholder: 'Programa / actividad' },
         { name: 'origin', label: 'Origen', required: true },
         { name: 'destination', label: 'Destino', required: true },
         { name: 'km_oneway', label: 'Kilómetros (solo ida)', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'total_km', label: 'Kilómetros totales', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'fuel_code_id', label: 'Combustible utilizado', type: 'select', source: 'fuelTypes', required: true }
+        { name: 'total_km', label: 'Kilómetros totales', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     removals: {
@@ -330,11 +330,11 @@
     fuelStationary: {
       endpoint: 'fuel',
       mapRecord: (record) => [
-        formatRecordContext(record),
-        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
-        { value: 'gal', display: 'Galones' },
-        formatNumber(record.gallons),
-        formatNumber(record.biogenic_co2),
+        record.description || formatRecordContext(record),
+        { value: record.fuel_type?.fuel_code, display: record.fuel_type?.description },
+        { value: record.unit, display: record.unit },
+        formatNumber(record.amount),
+        formatNumber(record.total_tco2e),
         '',
         ''
       ]
@@ -342,13 +342,10 @@
     fuelMobile: {
       endpoint: 'vehicle-fleet',
       mapRecord: (record) => [
-        formatRecordContext(
-          record,
-          record.km_traveled ? `${formatNumber(record.km_traveled, 2)} km` : ''
-        ),
-        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
-        { value: 'gal', display: 'Galones' },
-        formatNumber(record.gallons),
+        record.description || formatRecordContext(record, record.km_traveled ? `${formatNumber(record.km_traveled, 2)} km` : ''),
+        { value: record.fuel_type?.fuel_code, display: record.fuel_type?.description },
+        { value: record.unit, display: record.unit },
+        formatNumber(record.amount),
         '',
         '',
         ''
@@ -357,10 +354,10 @@
     extinguisherRefill: {
       endpoint: 'extinguisher-refill',
       mapRecord: (record) => [
-        formatRecordContext(record),
-        { value: record.ext_code?.ext_code, display: record.ext_code?.description },
-        { value: 'kg', display: 'Kilogramos' },
-        formatNumber(record.mass_kg),
+        record.description || formatRecordContext(record),
+        { value: record.ext_type?.ext_code, display: record.ext_type?.description },
+        { value: record.unit || 'kg', display: record.unit || 'kg' },
+        formatNumber(record.amount),
         '',
         '',
         ''
@@ -370,7 +367,7 @@
       endpoint: 'electricity',
       mapRecord: (record) => [
         formatRecordContext(record),
-        record.operator || '',
+        record.description || '',
         { value: 'kwh', display: 'kWh' },
         formatNumber(record.kwh),
         '',
@@ -396,7 +393,7 @@
       endpoint: 'field-practice',
       mapRecord: (record) => [
         `${record.origin || ''} → ${record.destination || ''}`.trim(),
-        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
+        { value: record.campus?.name || '', display: record.campus?.name || '' },
         { value: 'km', display: 'Kilómetros' },
         formatNumber(record.total_km, 2),
         '',
@@ -420,9 +417,9 @@
       endpoint: 'waste',
       mapRecord: (record) => [
         formatRecordContext(record),
-        { value: record.waste_code?.waste_code, display: record.waste_code?.description },
-        { value: 'kg', display: 'Kilogramos' },
-        formatNumber(record.kg),
+        { value: record.waste_type?.waste_code, display: record.waste_type?.description },
+        { value: record.unit || 'kg', display: record.unit || 'Kilogramos' },
+        formatNumber(record.amount),
         '',
         '',
         ''

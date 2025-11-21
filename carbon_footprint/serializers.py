@@ -86,83 +86,85 @@ class ElectricityConsumptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ElectricityConsumption
-        fields = ['id', 'period', 'period_id', 'campus', 'campus_id', 'operator', 'kwh']
+        fields = ['id', 'period', 'period_id', 'campus', 'campus_id', 'description', 'kwh', 'total_tco2e']
 
 
 class NaturalGasConsumptionSerializer(serializers.ModelSerializer):
     period = PeriodSerializer(read_only=True)
     campus = CampusSerializer(read_only=True)
+    fuel_type = FuelTypeSerializer(read_only=True)
     period_id = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all(), source='period', write_only=True)
     campus_id = serializers.PrimaryKeyRelatedField(queryset=Campus.objects.all(), source='campus', write_only=True)
+    fuel_type_id = serializers.PrimaryKeyRelatedField(queryset=FuelType.objects.all(), source='fuel_type', write_only=True)
 
     class Meta:
         model = NaturalGasConsumption
-        fields = ['id', 'period', 'period_id', 'campus', 'campus_id', 'operator', 'm3']
+        fields = ['id', 'period', 'period_id', 'campus', 'campus_id', 'fuel_type', 'fuel_type_id', 'm3', 'total_tco2e']
 
 
 class FuelConsumptionSerializer(serializers.ModelSerializer):
     period = PeriodSerializer(read_only=True)
     campus = CampusSerializer(read_only=True)
-    fuel_code = FuelTypeSerializer(read_only=True)
+    fuel_type = FuelTypeSerializer(read_only=True)
 
     period_id = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all(), source='period', write_only=True)
     campus_id = serializers.PrimaryKeyRelatedField(queryset=Campus.objects.all(), source='campus', write_only=True)
-    fuel_code_id = serializers.PrimaryKeyRelatedField(queryset=FuelType.objects.all(), source='fuel_code', write_only=True)
+    fuel_type_id = serializers.PrimaryKeyRelatedField(queryset=FuelType.objects.all(), source='fuel_type', write_only=True)
 
     class Meta:
         model = FuelConsumption
-        fields = ['id', 'period', 'period_id', 'campus', 'campus_id', 'fuel_code', 'fuel_code_id', 'gallons', 'biogenic_co2']
+        fields = [
+            'id', 'period', 'period_id', 'campus', 'campus_id', 'description', 'fuel_type', 'fuel_type_id',
+            'unit', 'amount', 'scope', 'total_tco2e'
+        ]
 
 
 class VehicleFleetConsumptionSerializer(serializers.ModelSerializer):
     period = PeriodSerializer(read_only=True)
     campus = CampusSerializer(read_only=True)
-    fuel_code = FuelTypeSerializer(read_only=True)
+    fuel_type = FuelTypeSerializer(read_only=True)
 
     period_id = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all(), source='period', write_only=True)
     campus_id = serializers.PrimaryKeyRelatedField(queryset=Campus.objects.all(), source='campus', write_only=True)
-    fuel_code_id = serializers.PrimaryKeyRelatedField(queryset=FuelType.objects.all(), source='fuel_code', write_only=True)
+    fuel_type_id = serializers.PrimaryKeyRelatedField(queryset=FuelType.objects.all(), source='fuel_type', write_only=True)
 
     class Meta:
         model = VehicleFleetConsumption
         fields = [
-            'id', 'period', 'period_id', 'campus', 'campus_id',
-            'fuel_code', 'fuel_code_id', 'km_traveled', 'gallons'
+            'id', 'period', 'period_id', 'campus', 'campus_id', 'description',
+            'fuel_type', 'fuel_type_id', 'unit', 'amount', 'km_traveled', 'total_tco2e'
         ]
 
 
 class ExtinguisherRefillSerializer(serializers.ModelSerializer):
     period = PeriodSerializer(read_only=True)
     campus = CampusSerializer(read_only=True)
-    ext_code = ExtinguisherTypeSerializer(read_only=True)
+    ext_type = ExtinguisherTypeSerializer(read_only=True)
 
     period_id = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all(), source='period', write_only=True)
     campus_id = serializers.PrimaryKeyRelatedField(queryset=Campus.objects.all(), source='campus', write_only=True)
-    ext_code_id = serializers.PrimaryKeyRelatedField(queryset=ExtinguisherType.objects.all(), source='ext_code', write_only=True)
+    ext_type_id = serializers.PrimaryKeyRelatedField(queryset=ExtinguisherType.objects.all(), source='ext_type', write_only=True)
 
     class Meta:
         model = ExtinguisherRefill
         fields = [
-            'id', 'period', 'period_id', 'campus', 'campus_id',
-            'ext_code', 'ext_code_id', 'mass_kg'
+            'id', 'period', 'period_id', 'campus', 'campus_id', 'description',
+            'ext_type', 'ext_type_id', 'unit', 'amount', 'total_tco2e'
         ]
 
 
 class WasteRecordSerializer(serializers.ModelSerializer):
     period = PeriodSerializer(read_only=True)
     campus = CampusSerializer(read_only=True)
-    waste_code = WasteTypeSerializer(read_only=True)
+    waste_type = WasteTypeSerializer(read_only=True)
 
     period_id = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all(), source='period', write_only=True)
     campus_id = serializers.PrimaryKeyRelatedField(queryset=Campus.objects.all(), source='campus', write_only=True)
-    waste_code_id = serializers.PrimaryKeyRelatedField(queryset=WasteType.objects.all(), source='waste_code', write_only=True)
+    waste_type_id = serializers.PrimaryKeyRelatedField(queryset=WasteType.objects.all(), source='waste_type', write_only=True)
 
     class Meta:
         model = WasteRecord
-        fields = [
-            'id', 'period', 'period_id', 'campus', 'campus_id',
-            'waste_code', 'waste_code_id', 'kg'
-        ]
+        fields = ['id', 'period', 'period_id', 'campus', 'campus_id', 'waste_type', 'waste_type_id', 'unit', 'amount', 'total_tco2e']
 
 
 class PaperConsumptionSerializer(serializers.ModelSerializer):
@@ -176,10 +178,7 @@ class PaperConsumptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PaperConsumption
-        fields = [
-            'id', 'period', 'period_id', 'campus', 'campus_id',
-            'size', 'size_id', 'reams'
-        ]
+        fields = ['id', 'period', 'period_id', 'campus', 'campus_id', 'description', 'size', 'size_id', 'reams', 'total_tco2e']
 
 
 
@@ -195,18 +194,15 @@ class FlightSerializer(serializers.ModelSerializer):
 class FieldPracticeTripSerializer(serializers.ModelSerializer):
     period = PeriodSerializer(read_only=True)
     campus = CampusSerializer(read_only=True)
-    fuel_code = FuelTypeSerializer(read_only=True)
 
     period_id = serializers.PrimaryKeyRelatedField(queryset=Period.objects.all(), source='period', write_only=True)
     campus_id = serializers.PrimaryKeyRelatedField(queryset=Campus.objects.all(), source='campus', write_only=True)
-    fuel_code_id = serializers.PrimaryKeyRelatedField(queryset=FuelType.objects.all(), source='fuel_code', write_only=True)
 
     class Meta:
         model = FieldPracticeTrip
         fields = [
             'id', 'period', 'period_id', 'campus', 'campus_id',
-            'origin', 'destination', 'km_oneway', 'total_km',
-            'fuel_code', 'fuel_code_id'
+            'description', 'origin', 'destination', 'km_oneway', 'total_km', 'total_tco2e'
         ]
 
 
