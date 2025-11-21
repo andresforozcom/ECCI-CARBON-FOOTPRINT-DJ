@@ -237,6 +237,81 @@
     return Number(value).toFixed(decimals);
   };
 
+  const CARBON_FORMULAS = {
+    combustion_estacionaria: (A_m3, FE_CO2, FE_CH4, FE_N2O, PCG_CH4 = 28, PCG_N2O = 265) => {
+      const E_CO2 = A_m3 * FE_CO2 / 1000;
+      const E_CH4 = (A_m3 * FE_CH4 * PCG_CH4) / 1000;
+      const E_N2O = (A_m3 * FE_N2O * PCG_N2O) / 1000;
+      return (E_CO2 + E_CH4 + E_N2O) / 1000;
+    },
+    combustion_movil: (A_litros, FE_CO2, FE_CH4, FE_N2O, PCG_CH4 = 28, PCG_N2O = 265) => {
+      const E_CO2 = A_litros * FE_CO2 / 1000;
+      const E_CH4 = (A_litros * FE_CH4 * PCG_CH4) / 1000;
+      const E_N2O = (A_litros * FE_N2O * PCG_N2O) / 1000;
+      return (E_CO2 + E_CH4 + E_N2O) / 1000;
+    },
+    procesos_industriales: (Q, FE) => Q * FE,
+    fugitivas: (m_kg, GWP) => (m_kg * GWP) / 1000,
+    lubricantes: (actividad, FE) => actividad * FE,
+    electricidad: (consumo_kwh, FE_kg_kwh) => (consumo_kwh * FE_kg_kwh) / 1000,
+    transporte_generico: (dato_actividad, FE) => (dato_actividad * FE) / 1000,
+    papel: (consumo_kg, FE) => consumo_kg * FE,
+    papel_resmas: (resmas, FE, resmaKg = 2.5) => (resmas * resmaKg) * FE,
+    residuos: (masa, FE) => masa * FE,
+    remocion_forestal: (N, captura_ha, densidad) => (N / densidad) * captura_ha,
+    reciclaje: (masa_t, FE_CH4_res, GWP_CH4 = 27) => masa_t * FE_CH4_res * GWP_CH4
+  };
+
+  const FORMULA_CONFIG = {
+    combustion_estacionaria: {
+      params: ['A_m3', 'FE_CO2', 'FE_CH4', 'FE_N2O', 'PCG_CH4', 'PCG_N2O'],
+      defaults: { PCG_CH4: 28, PCG_N2O: 265 },
+      fn: CARBON_FORMULAS.combustion_estacionaria
+    },
+    combustion_movil: {
+      params: ['A_litros', 'FE_CO2', 'FE_CH4', 'FE_N2O', 'PCG_CH4', 'PCG_N2O'],
+      defaults: { PCG_CH4: 28, PCG_N2O: 265 },
+      fn: CARBON_FORMULAS.combustion_movil
+    },
+    procesos_industriales: {
+      params: ['Q', 'FE'],
+      fn: CARBON_FORMULAS.procesos_industriales
+    },
+    fugitivas: {
+      params: ['m_kg', 'GWP'],
+      fn: CARBON_FORMULAS.fugitivas
+    },
+    lubricantes: {
+      params: ['actividad', 'FE'],
+      fn: CARBON_FORMULAS.lubricantes
+    },
+    electricidad: {
+      params: ['consumo_kwh', 'FE_kg_kwh'],
+      fn: CARBON_FORMULAS.electricidad
+    },
+    transporte_generico: {
+      params: ['dato_actividad', 'FE'],
+      fn: CARBON_FORMULAS.transporte_generico
+    },
+    papel_resmas: {
+      params: ['resmas', 'FE'],
+      fn: CARBON_FORMULAS.papel_resmas
+    },
+    residuos: {
+      params: ['masa', 'FE'],
+      fn: CARBON_FORMULAS.residuos
+    },
+    remocion_forestal: {
+      params: ['N', 'captura_ha', 'densidad'],
+      fn: CARBON_FORMULAS.remocion_forestal
+    },
+    reciclaje: {
+      params: ['masa_t', 'FE_CH4_res', 'GWP_CH4'],
+      defaults: { GWP_CH4: 27 },
+      fn: CARBON_FORMULAS.reciclaje
+    }
+  };
+
   const formatRecordContext = (record, extra) => {
     const parts = [];
     if (record.campus && record.campus.name) {
@@ -447,6 +522,154 @@
     const tables = document.querySelectorAll('table.emisiones-table');
     tables.forEach((table) => {
       hydrateTable(table).catch((error) => console.error(error));
+    });
+  };
+
+  const toCamelCase = (text) =>
+    (text || '')
+      .toString()
+      .toLowerCase()
+      .split(/[_-]+/)
+      .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+      .join('');
+
+  const readParamValue = (row, table, param, defaults = {}) => {
+    const input = row.querySelector(`[data-carbon-field="${param}"]`);
+    let value = input ? parseFloat(input.value) : undefined;
+
+    if (Number.isNaN(value)) {
+      value = undefined;
+    }
+
+    if (value === undefined) {
+      const datasetKey = `default${toCamelCase(param)}`;
+      const datasetValue = table.dataset[datasetKey];
+      if (datasetValue !== undefined) {
+        const parsed = parseFloat(datasetValue);
+        value = Number.isNaN(parsed) ? undefined : parsed;
+      }
+    }
+
+    if (value === undefined && defaults[param] !== undefined) {
+      value = defaults[param];
+    }
+
+    return value;
+  };
+
+  const calculateTableEmissions = (table) => {
+    const formulaKey = table.dataset.carbonFormula;
+    const config = FORMULA_CONFIG[formulaKey];
+
+    if (!config || !config.fn) {
+      return;
+    }
+
+    let total = 0;
+
+    table.querySelectorAll('tbody tr').forEach((row) => {
+      const values = config.params.map((param) => readParamValue(row, table, param, config.defaults || {}));
+
+      if (values.some((value) => value === undefined)) {
+        return;
+      }
+
+      const result = config.fn(...values);
+
+      if (Number.isNaN(result)) {
+        return;
+      }
+
+      total += result;
+
+      const output = row.querySelector('[data-carbon-result]') || row.querySelector('input[disabled]');
+      if (output) {
+        output.value = formatNumber(result);
+      }
+    });
+
+    const totalCell = table.querySelector('[data-carbon-total]');
+    if (totalCell) {
+      totalCell.textContent = formatNumber(total);
+    }
+  };
+
+  const setupTableActions = (table) => {
+    const actions = table.parentElement?.querySelector('.action-buttons');
+    if (!actions) {
+      return;
+    }
+
+    const addRow = () => {
+      const tbody = table.querySelector('tbody');
+      const templateRow = tbody?.querySelector('tr');
+      if (!tbody || !templateRow) {
+        return;
+      }
+
+      const newRow = templateRow.cloneNode(true);
+      resetRowInputs(newRow);
+      tbody.appendChild(newRow);
+      hydrateTable(table).catch((error) => console.error(error));
+    };
+
+    const removeRow = () => {
+      const tbody = table.querySelector('tbody');
+      if (!tbody || !tbody.lastElementChild) {
+        return;
+      }
+
+      if (tbody.children.length > 1) {
+        tbody.removeChild(tbody.lastElementChild);
+      } else {
+        resetRowInputs(tbody.firstElementChild);
+        const output = tbody.firstElementChild?.querySelector('[data-carbon-result]');
+        if (output) {
+          output.value = '';
+        }
+      }
+    };
+
+    const exportTable = () => {
+      const rows = Array.from(table.querySelectorAll('tr'));
+      const csv = rows
+        .map((row) =>
+          Array.from(row.querySelectorAll('th,td'))
+            .map((cell) => {
+              const field = cell.querySelector('input, select');
+              const value = field ? field.value : cell.textContent.trim();
+              return `"${value}"`;
+            })
+            .join(',')
+        )
+        .join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `${table.closest('section')?.id || 'tabla'}.csv`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    };
+
+    actions.querySelectorAll('[data-carbon-action]').forEach((button) => {
+      const action = button.dataset.carbonAction;
+      if (action === 'add-row') {
+        button.addEventListener('click', addRow);
+      } else if (action === 'remove-row') {
+        button.addEventListener('click', removeRow);
+      } else if (action === 'calculate') {
+        button.addEventListener('click', () => calculateTableEmissions(table));
+      } else if (action === 'export') {
+        button.addEventListener('click', exportTable);
+      }
+    });
+  };
+
+  const initCarbonTables = () => {
+    document.querySelectorAll('table.emisiones-table').forEach((table) => {
+      setupTableActions(table);
     });
   };
 
@@ -1038,6 +1261,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     hydrateAllTables();
+    initCarbonTables();
     initTableDataLoaders();
     initDataEntryForm();
     initDownloadButton();
