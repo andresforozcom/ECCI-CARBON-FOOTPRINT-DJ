@@ -266,49 +266,63 @@
     combustion_estacionaria: {
       params: ['A_m3', 'FE_CO2', 'FE_CH4', 'FE_N2O', 'PCG_CH4', 'PCG_N2O'],
       defaults: { PCG_CH4: 28, PCG_N2O: 265 },
-      fn: CARBON_FORMULAS.combustion_estacionaria
+      fn: CARBON_FORMULAS.combustion_estacionaria,
+      formula: '((A_m3 * FE_CO2 / 1000) + (A_m3 * FE_CH4 * PCG_CH4 / 1000) + (A_m3 * FE_N2O * PCG_N2O / 1000)) / 1000'
+
     },
     combustion_movil: {
       params: ['A_litros', 'FE_CO2', 'FE_CH4', 'FE_N2O', 'PCG_CH4', 'PCG_N2O'],
       defaults: { PCG_CH4: 28, PCG_N2O: 265 },
-      fn: CARBON_FORMULAS.combustion_movil
+      fn: CARBON_FORMULAS.combustion_movil,
+      formula: '((A_litros * FE_CO2 / 1000) + (A_litros * FE_CH4 * PCG_CH4 / 1000) + (A_litros * FE_N2O * PCG_N2O / 1000)) / 1000'
     },
     procesos_industriales: {
       params: ['Q', 'FE'],
-      fn: CARBON_FORMULAS.procesos_industriales
+      fn: CARBON_FORMULAS.procesos_industriales,
+      formula: 'Q * FE'
     },
     fugitivas: {
       params: ['m_kg', 'GWP'],
-      fn: CARBON_FORMULAS.fugitivas
+      fn: CARBON_FORMULAS.fugitivas,
+      formula: '(m_kg * GWP) / 1000'
     },
     lubricantes: {
       params: ['actividad', 'FE'],
-      fn: CARBON_FORMULAS.lubricantes
+      fn: CARBON_FORMULAS.lubricantes,
+      formula: 'actividad * FE'
     },
     electricidad: {
       params: ['consumo_kwh', 'FE_kg_kwh'],
-      fn: CARBON_FORMULAS.electricidad
+      fn: CARBON_FORMULAS.electricidad,
+      formula: '(consumo_kwh * FE_kg_kwh) / 1000'
     },
     transporte_generico: {
       params: ['dato_actividad', 'FE'],
-      fn: CARBON_FORMULAS.transporte_generico
+      fn: CARBON_FORMULAS.transporte_generico,
+      formula: '(dato_actividad * FE) / 1000'
     },
     papel_resmas: {
       params: ['resmas', 'FE'],
-      fn: CARBON_FORMULAS.papel_resmas
+      fn: CARBON_FORMULAS.papel_resmas,
+      formula: '(resmas * 2.5) * FE'
     },
     residuos: {
       params: ['masa', 'FE'],
-      fn: CARBON_FORMULAS.residuos
+      fn: CARBON_FORMULAS.residuos,
+      formula: 'masa * FE'
     },
     remocion_forestal: {
       params: ['N', 'captura_ha', 'densidad'],
-      fn: CARBON_FORMULAS.remocion_forestal
+      fn: CARBON_FORMULAS.remocion_forestal,
+      formula: '(N / densidad) * captura_ha'
+
     },
     reciclaje: {
       params: ['masa_t', 'FE_CH4_res', 'GWP_CH4'],
       defaults: { GWP_CH4: 27 },
-      fn: CARBON_FORMULAS.reciclaje
+      fn: CARBON_FORMULAS.reciclaje,
+      formula: 'masa_t * FE_CH4_res * (GWP_CH4 || 27)'
+
     }
   };
 
@@ -559,6 +573,15 @@
     const config = FORMULA_CONFIG[formulaKey];
 
     if (!config || !config.fn) {
+      console.warn('[Carbon] No se encontró configuración de fórmula para', formulaKey, table);
+      return;
+    }
+
+    console.info(`[Carbon] Ejecutando cálculo: ${formulaKey}`);
+    if (config.formula) {
+      console.info('[Carbon] Fórmula utilizada:', config.formula);
+    }
+
       return;
     }
 
@@ -567,6 +590,15 @@
     table.querySelectorAll('tbody tr').forEach((row) => {
       const values = config.params.map((param) => readParamValue(row, table, param, config.defaults || {}));
 
+      const rowValuesLog = config.params.reduce((acc, param, index) => {
+        acc[param] = values[index];
+        return acc;
+      }, {});
+
+      console.debug('[Carbon] Valores de fila leídos:', rowValuesLog);
+
+      if (values.some((value) => value === undefined)) {
+        console.warn('[Carbon] Faltan datos para calcular la fila, se omite', rowValuesLog);
       if (values.some((value) => value === undefined)) {
         return;
       }
@@ -574,16 +606,23 @@
       const result = config.fn(...values);
 
       if (Number.isNaN(result)) {
+        console.warn('[Carbon] Resultado inválido para la fila', rowValuesLog);
+
         return;
       }
 
       total += result;
+
+      console.debug('[Carbon] Resultado de la fila:', result);
+
 
       const output = row.querySelector('[data-carbon-result]') || row.querySelector('input[disabled]');
       if (output) {
         output.value = formatNumber(result);
       }
     });
+
+    console.info('[Carbon] Total acumulado:', total);
 
     const totalCell = table.querySelector('[data-carbon-total]');
     if (totalCell) {
