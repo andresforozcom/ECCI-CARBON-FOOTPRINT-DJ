@@ -113,7 +113,7 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'operator', label: 'Operador (opcional)', placeholder: 'Nombre del operador' },
+        { name: 'description', label: 'Descripción (opcional)', placeholder: 'Descripción del consumo' },
         { name: 'kwh', label: 'Consumo (kWh)', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
@@ -122,7 +122,7 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'operator', label: 'Operador (opcional)', placeholder: 'Nombre del operador' },
+        { name: 'fuel_type_id', label: 'Tipo de combustible', type: 'select', source: 'fuelTypes', required: true },
         { name: 'm3', label: 'Consumo (m³)', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
@@ -131,16 +131,10 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'fuel_code_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
-        { name: 'gallons', label: 'Consumo (galones)', type: 'number', step: '0.01', required: true, cast: 'float' },
-        {
-          name: 'biogenic_co2',
-          label: 'CO₂ biogénico (t)',
-          type: 'number',
-          step: '0.001',
-          cast: 'float',
-          placeholder: 'Opcional'
-        }
+        { name: 'description', label: 'Descripción de la fuente', required: true },
+        { name: 'fuel_type_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'galones, litros...', required: true },
+        { name: 'amount', label: 'Consumo', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     fuelMobile: {
@@ -148,9 +142,11 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'fuel_code_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
-        { name: 'km_traveled', label: 'Kilómetros recorridos', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'gallons', label: 'Consumo (galones)', type: 'number', step: '0.01', required: true, cast: 'float' }
+        { name: 'description', label: 'Descripción de la fuente', required: true },
+        { name: 'fuel_type_id', label: 'Combustible', type: 'select', source: 'fuelTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'galones, litros...', required: true },
+        { name: 'amount', label: 'Consumo', type: 'number', step: '0.01', required: true, cast: 'float' },
+        { name: 'km_traveled', label: 'Kilómetros recorridos', type: 'number', step: '0.01', cast: 'float' }
       ]
     },
     extinguisherRefill: {
@@ -158,8 +154,10 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'ext_code_id', label: 'Tipo de agente', type: 'select', source: 'extinguisherTypes', required: true },
-        { name: 'mass_kg', label: 'Masa recargada (kg)', type: 'number', step: '0.01', required: true, cast: 'float' }
+        { name: 'description', label: 'Descripción', required: true },
+        { name: 'ext_type_id', label: 'Tipo de agente', type: 'select', source: 'extinguisherTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'kg', required: true, default: 'kg' },
+        { name: 'amount', label: 'Cantidad', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     waste: {
@@ -167,8 +165,9 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
-        { name: 'waste_code_id', label: 'Tipo de residuo', type: 'select', source: 'wasteTypes', required: true },
-        { name: 'kg', label: 'Residuos (kg)', type: 'number', step: '0.01', required: true, cast: 'float' }
+        { name: 'waste_type_id', label: 'Tipo de residuo', type: 'select', source: 'wasteTypes', required: true },
+        { name: 'unit', label: 'Unidad', placeholder: 'kg', required: true, default: 'kg' },
+        { name: 'amount', label: 'Cantidad', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     paper: {
@@ -176,6 +175,7 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
+        { name: 'description', label: 'Descripción (opcional)', placeholder: 'Área o responsable' },
         { name: 'size_id', label: 'Formato de papel', type: 'select', source: 'paperWeights', required: true },
         { name: 'reams', label: 'Cantidad (resmas)', type: 'number', step: '1', min: '0', required: true, cast: 'int' }
       ]
@@ -212,11 +212,11 @@
       fields: [
         { name: 'period_id', label: 'Periodo', type: 'select', source: 'periods', required: true },
         { name: 'campus_id', label: 'Sede / campus', type: 'select', source: 'campus', required: true },
+        { name: 'description', label: 'Descripción (opcional)', placeholder: 'Programa / actividad' },
         { name: 'origin', label: 'Origen', required: true },
         { name: 'destination', label: 'Destino', required: true },
         { name: 'km_oneway', label: 'Kilómetros (solo ida)', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'total_km', label: 'Kilómetros totales', type: 'number', step: '0.01', required: true, cast: 'float' },
-        { name: 'fuel_code_id', label: 'Combustible utilizado', type: 'select', source: 'fuelTypes', required: true }
+        { name: 'total_km', label: 'Kilómetros totales', type: 'number', step: '0.01', required: true, cast: 'float' }
       ]
     },
     removals: {
@@ -237,6 +237,92 @@
     return Number(value).toFixed(decimals);
   };
 
+  const CARBON_FORMULAS = {
+    combustion_estacionaria: (A_m3, FE_CO2, FE_CH4, FE_N2O, PCG_CH4 = 28, PCG_N2O = 265) => {
+      const E_CO2 = A_m3 * FE_CO2 / 1000;
+      const E_CH4 = (A_m3 * FE_CH4 * PCG_CH4) / 1000;
+      const E_N2O = (A_m3 * FE_N2O * PCG_N2O) / 1000;
+      return (E_CO2 + E_CH4 + E_N2O) / 1000;
+    },
+    combustion_movil: (A_litros, FE_CO2, FE_CH4, FE_N2O, PCG_CH4 = 28, PCG_N2O = 265) => {
+      const E_CO2 = A_litros * FE_CO2 / 1000;
+      const E_CH4 = (A_litros * FE_CH4 * PCG_CH4) / 1000;
+      const E_N2O = (A_litros * FE_N2O * PCG_N2O) / 1000;
+      return (E_CO2 + E_CH4 + E_N2O) / 1000;
+    },
+    procesos_industriales: (Q, FE) => Q * FE,
+    fugitivas: (m_kg, GWP) => (m_kg * GWP) / 1000,
+    lubricantes: (actividad, FE) => actividad * FE,
+    electricidad: (consumo_kwh, FE_kg_kwh) => (consumo_kwh * FE_kg_kwh) / 1000,
+    transporte_generico: (dato_actividad, FE) => (dato_actividad * FE) / 1000,
+    papel: (consumo_kg, FE) => consumo_kg * FE,
+    papel_resmas: (resmas, FE, resmaKg = 2.5) => (resmas * resmaKg) * FE,
+    residuos: (masa, FE) => masa * FE,
+    remocion_forestal: (N, captura_ha, densidad) => (N / densidad) * captura_ha,
+    reciclaje: (masa_t, FE_CH4_res, GWP_CH4 = 27) => masa_t * FE_CH4_res * GWP_CH4
+  };
+
+  const FORMULA_CONFIG = {
+    combustion_estacionaria: {
+      params: ['A_m3', 'FE_CO2', 'FE_CH4', 'FE_N2O', 'PCG_CH4', 'PCG_N2O'],
+      defaults: { PCG_CH4: 28, PCG_N2O: 265 },
+      fn: CARBON_FORMULAS.combustion_estacionaria,
+      formula: '((A_m3 * FE_CO2 / 1000) + (A_m3 * FE_CH4 * PCG_CH4 / 1000) + (A_m3 * FE_N2O * PCG_N2O / 1000)) / 1000'
+    },
+    combustion_movil: {
+      params: ['A_litros', 'FE_CO2', 'FE_CH4', 'FE_N2O', 'PCG_CH4', 'PCG_N2O'],
+      defaults: { PCG_CH4: 28, PCG_N2O: 265 },
+      fn: CARBON_FORMULAS.combustion_movil,
+      formula: '((A_litros * FE_CO2 / 1000) + (A_litros * FE_CH4 * PCG_CH4 / 1000) + (A_litros * FE_N2O * PCG_N2O / 1000)) / 1000'
+    },
+    procesos_industriales: {
+      params: ['Q', 'FE'],
+      fn: CARBON_FORMULAS.procesos_industriales,
+      formula: 'Q * FE'
+    },
+    fugitivas: {
+      params: ['m_kg', 'GWP'],
+      fn: CARBON_FORMULAS.fugitivas,
+      formula: '(m_kg * GWP) / 1000'
+    },
+    lubricantes: {
+      params: ['actividad', 'FE'],
+      fn: CARBON_FORMULAS.lubricantes,
+      formula: 'actividad * FE'
+    },
+    electricidad: {
+      params: ['consumo_kwh', 'FE_kg_kwh'],
+      fn: CARBON_FORMULAS.electricidad,
+      formula: '(consumo_kwh * FE_kg_kwh) / 1000'
+    },
+    transporte_generico: {
+      params: ['dato_actividad', 'FE'],
+      fn: CARBON_FORMULAS.transporte_generico,
+      formula: '(dato_actividad * FE) / 1000'
+    },
+    papel_resmas: {
+      params: ['resmas', 'FE'],
+      fn: CARBON_FORMULAS.papel_resmas,
+      formula: '(resmas * 2.5) * FE'
+    },
+    residuos: {
+      params: ['masa', 'FE'],
+      fn: CARBON_FORMULAS.residuos,
+      formula: 'masa * FE'
+    },
+    remocion_forestal: {
+      params: ['N', 'captura_ha', 'densidad'],
+      fn: CARBON_FORMULAS.remocion_forestal,
+      formula: '(N / densidad) * captura_ha'
+    },
+    reciclaje: {
+      params: ['masa_t', 'FE_CH4_res', 'GWP_CH4'],
+      defaults: { GWP_CH4: 27 },
+      fn: CARBON_FORMULAS.reciclaje,
+      formula: 'masa_t * FE_CH4_res * (GWP_CH4 || 27)'
+    }
+  };
+
   const formatRecordContext = (record, extra) => {
     const parts = [];
     if (record.campus && record.campus.name) {
@@ -255,11 +341,11 @@
     fuelStationary: {
       endpoint: 'fuel',
       mapRecord: (record) => [
-        formatRecordContext(record),
-        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
-        { value: 'gal', display: 'Galones' },
-        formatNumber(record.gallons),
-        formatNumber(record.biogenic_co2),
+        record.description || formatRecordContext(record),
+        { value: record.fuel_type?.fuel_code, display: record.fuel_type?.description },
+        { value: record.unit, display: record.unit },
+        formatNumber(record.amount),
+        formatNumber(record.total_tco2e),
         '',
         ''
       ]
@@ -267,13 +353,10 @@
     fuelMobile: {
       endpoint: 'vehicle-fleet',
       mapRecord: (record) => [
-        formatRecordContext(
-          record,
-          record.km_traveled ? `${formatNumber(record.km_traveled, 2)} km` : ''
-        ),
-        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
-        { value: 'gal', display: 'Galones' },
-        formatNumber(record.gallons),
+        record.description || formatRecordContext(record, record.km_traveled ? `${formatNumber(record.km_traveled, 2)} km` : ''),
+        { value: record.fuel_type?.fuel_code, display: record.fuel_type?.description },
+        { value: record.unit, display: record.unit },
+        formatNumber(record.amount),
         '',
         '',
         ''
@@ -282,10 +365,10 @@
     extinguisherRefill: {
       endpoint: 'extinguisher-refill',
       mapRecord: (record) => [
-        formatRecordContext(record),
-        { value: record.ext_code?.ext_code, display: record.ext_code?.description },
-        { value: 'kg', display: 'Kilogramos' },
-        formatNumber(record.mass_kg),
+        record.description || formatRecordContext(record),
+        { value: record.ext_type?.ext_code, display: record.ext_type?.description },
+        { value: record.unit || 'kg', display: record.unit || 'kg' },
+        formatNumber(record.amount),
         '',
         '',
         ''
@@ -295,7 +378,7 @@
       endpoint: 'electricity',
       mapRecord: (record) => [
         formatRecordContext(record),
-        record.operator || '',
+        record.description || '',
         { value: 'kwh', display: 'kWh' },
         formatNumber(record.kwh),
         '',
@@ -321,7 +404,7 @@
       endpoint: 'field-practice',
       mapRecord: (record) => [
         `${record.origin || ''} → ${record.destination || ''}`.trim(),
-        { value: record.fuel_code?.fuel_code, display: record.fuel_code?.description },
+        { value: record.campus?.name || '', display: record.campus?.name || '' },
         { value: 'km', display: 'Kilómetros' },
         formatNumber(record.total_km, 2),
         '',
@@ -345,9 +428,9 @@
       endpoint: 'waste',
       mapRecord: (record) => [
         formatRecordContext(record),
-        { value: record.waste_code?.waste_code, display: record.waste_code?.description },
-        { value: 'kg', display: 'Kilogramos' },
-        formatNumber(record.kg),
+        { value: record.waste_type?.waste_code, display: record.waste_type?.description },
+        { value: record.unit || 'kg', display: record.unit || 'Kilogramos' },
+        formatNumber(record.amount),
         '',
         '',
         ''
@@ -447,6 +530,190 @@
     const tables = document.querySelectorAll('table.emisiones-table');
     tables.forEach((table) => {
       hydrateTable(table).catch((error) => console.error(error));
+    });
+  };
+
+  const toCamelCase = (text) =>
+    (text || '')
+      .toString()
+      .toLowerCase()
+      .split(/[_-]+/)
+      .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+      .join('');
+
+  const readParamValue = (row, table, param, defaults = {}) => {
+    const input = row.querySelector(`[data-carbon-field="${param}"]`);
+    let value = input ? parseFloat(input.value) : undefined;
+
+    if (Number.isNaN(value)) {
+      value = undefined;
+    }
+
+    if (value === undefined) {
+      const datasetKey = `default${toCamelCase(param)}`;
+      const datasetValue = table.dataset[datasetKey];
+      if (datasetValue !== undefined) {
+        const parsed = parseFloat(datasetValue);
+        value = Number.isNaN(parsed) ? undefined : parsed;
+      }
+    }
+
+    if (value === undefined && defaults[param] !== undefined) {
+      value = defaults[param];
+    }
+
+    return value;
+  };
+
+  const calculateTableEmissions = (table) => {
+    const formulaKey = table.dataset.carbonFormula;
+    const config = FORMULA_CONFIG[formulaKey];
+
+    if (!config || !config.fn) {
+      console.warn('[Carbon] No se encontró configuración de fórmula para', formulaKey, table);
+      return;
+    }
+
+    console.info(`[Carbon] Ejecutando cálculo: ${formulaKey}`);
+    if (config.formula) {
+      console.info('[Carbon] Fórmula utilizada:', config.formula);
+    }
+
+    let total = 0;
+
+    table.querySelectorAll('tbody tr').forEach((row) => {
+      const values = config.params.map((param) => readParamValue(row, table, param, config.defaults || {}));
+
+      const rowValuesLog = config.params.reduce((acc, param, index) => {
+        acc[param] = values[index];
+        return acc;
+      }, {});
+
+      console.debug('[Carbon] Valores de fila leídos:', rowValuesLog);
+
+      if (values.some((value) => value === undefined)) {
+        console.warn('[Carbon] Faltan datos para calcular la fila, se omite', rowValuesLog);
+        return;
+      }
+
+      const result = config.fn(...values);
+
+      if (Number.isNaN(result)) {
+        console.warn('[Carbon] Resultado inválido para la fila', rowValuesLog);
+        return;
+      }
+
+      total += result;
+
+      console.debug('[Carbon] Resultado de la fila:', result);
+
+      const output = row.querySelector('[data-carbon-result]') || row.querySelector('input[disabled]');
+      if (output) {
+        output.value = formatNumber(result);
+      }
+    });
+
+    console.info('[Carbon] Total acumulado:', total);
+
+    const totalCell = table.querySelector('[data-carbon-total]');
+    if (totalCell) {
+      totalCell.textContent = formatNumber(total);
+
+      const uncertaintyCell = totalCell.nextElementSibling;
+      if (uncertaintyCell && uncertaintyCell.tagName === 'TD') {
+        uncertaintyCell.textContent = '+/- 0,000%';
+      }
+    }
+  };
+
+  const setupTableActions = (table) => {
+    const scope =
+      table.closest('.subscreen') ||
+      table.closest('section') ||
+      table.parentElement ||
+      table;
+
+    const scopedActions = scope?.querySelector('.action-buttons');
+    const siblingActions = table.nextElementSibling?.classList?.contains('action-buttons')
+      ? table.nextElementSibling
+      : null;
+
+    const actions = scopedActions || siblingActions;
+    if (!actions) {
+      return;
+    }
+
+    const addRow = () => {
+      const tbody = table.querySelector('tbody');
+      const templateRow = tbody?.querySelector('tr');
+      if (!tbody || !templateRow) {
+        return;
+      }
+
+      const newRow = templateRow.cloneNode(true);
+      resetRowInputs(newRow);
+      tbody.appendChild(newRow);
+      hydrateTable(table).catch((error) => console.error(error));
+    };
+
+    const removeRow = () => {
+      const tbody = table.querySelector('tbody');
+      if (!tbody || !tbody.lastElementChild) {
+        return;
+      }
+
+      if (tbody.children.length > 1) {
+        tbody.removeChild(tbody.lastElementChild);
+      } else {
+        resetRowInputs(tbody.firstElementChild);
+        const output = tbody.firstElementChild?.querySelector('[data-carbon-result]');
+        if (output) {
+          output.value = '';
+        }
+      }
+    };
+
+    const exportTable = () => {
+      const rows = Array.from(table.querySelectorAll('tr'));
+      const csv = rows
+        .map((row) =>
+          Array.from(row.querySelectorAll('th,td'))
+            .map((cell) => {
+              const field = cell.querySelector('input, select');
+              const value = field ? field.value : cell.textContent.trim();
+              return `"${value}"`;
+            })
+            .join(',')
+        )
+        .join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `${table.closest('section')?.id || 'tabla'}.csv`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    };
+
+    actions.querySelectorAll('[data-carbon-action]').forEach((button) => {
+      const action = button.dataset.carbonAction;
+      button.type = 'button';
+      if (action === 'add-row') {
+        button.addEventListener('click', addRow);
+      } else if (action === 'remove-row') {
+        button.addEventListener('click', removeRow);
+      } else if (action === 'calculate') {
+        button.addEventListener('click', () => calculateTableEmissions(table));
+      } else if (action === 'export') {
+        button.addEventListener('click', exportTable);
+      }
+    });
+  };
+
+  const initCarbonTables = () => {
+    document.querySelectorAll('table.emisiones-table').forEach((table) => {
+      setupTableActions(table);
     });
   };
 
@@ -1038,6 +1305,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     hydrateAllTables();
+    initCarbonTables();
     initTableDataLoaders();
     initDataEntryForm();
     initDownloadButton();
