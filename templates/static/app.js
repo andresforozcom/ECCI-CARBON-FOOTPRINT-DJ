@@ -588,11 +588,29 @@
     const totalCell = table.querySelector('[data-carbon-total]');
     if (totalCell) {
       totalCell.textContent = formatNumber(total);
+
+      const uncertaintyCell = totalCell.nextElementSibling;
+      if (uncertaintyCell && uncertaintyCell.tagName === 'TD') {
+        uncertaintyCell.textContent = '+/- 0,000%';
+      }
+
     }
   };
 
   const setupTableActions = (table) => {
-    const actions = table.parentElement?.querySelector('.action-buttons');
+    const scope =
+      table.closest('.subscreen') ||
+      table.closest('section') ||
+      table.parentElement ||
+      table;
+
+    const scopedActions = scope?.querySelector('.action-buttons');
+    const siblingActions = table.nextElementSibling?.classList?.contains('action-buttons')
+      ? table.nextElementSibling
+      : null;
+
+    const actions = scopedActions || siblingActions;
+
     if (!actions) {
       return;
     }
@@ -652,6 +670,8 @@
 
     actions.querySelectorAll('[data-carbon-action]').forEach((button) => {
       const action = button.dataset.carbonAction;
+      button.type = 'button';
+
       if (action === 'add-row') {
         button.addEventListener('click', addRow);
       } else if (action === 'remove-row') {
